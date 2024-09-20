@@ -20,6 +20,8 @@ public class Users {
     @JoinColumn(name = "user_info_id",referencedColumnName = "id")
     private UserInfo userInfo;
 
+    public Users() {
+    }
 
     public Users(String username, String email, String password, UserInfo userInfo) {
         this.username = username;

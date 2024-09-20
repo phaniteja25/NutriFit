@@ -27,10 +27,16 @@ public class UserController {
     @Autowired
     private UserInfoService userInfoService;
 
+
+
     @PostMapping("/signup")
     public ResponseEntity<String> user_signup(@RequestBody UserSignUpDto userSignUpDto){
 
         try{
+            if(userService.isEmailAlreadyInUse(userSignUpDto.getEmail())){
+                return new  ResponseEntity<String>("Account already created! Please Sign In",HttpStatus.ACCEPTED);
+
+            }
 
             NutritionalInfoCalcluator nutritionalInfoCalcluator = new NutritionalInfoCalcluator(userSignUpDto.getHeight(),userSignUpDto.getWeight(),userSignUpDto.getAge(),userSignUpDto.getGender(),userSignUpDto.getActivity_level(),userSignUpDto.getActivity_level());
 

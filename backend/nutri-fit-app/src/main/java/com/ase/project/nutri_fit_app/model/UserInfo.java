@@ -33,6 +33,9 @@ public class UserInfo {
     @OneToOne(mappedBy = "userInfo")
     private Users users;
 
+    public UserInfo() {
+    }
+
     public UserInfo(double height, double weight, int age, String gender, String activity_level, String goal, double total_cal_intake, double reqd_protein, double reqd_fat, double reqd_carbs) {
         this.height = height;
         this.weight = weight;

@@ -32,4 +32,15 @@ public class UserService {
         }
     }
 
+
+    public boolean isEmailAlreadyInUse(String email) {
+        Users existingUser = userRepo.findByEmail(email);
+        if(existingUser!= null){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 }
