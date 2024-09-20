@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity()
+@Table(name = "users")
 public class Users {
 
     @Id
@@ -12,27 +13,19 @@ public class Users {
     private UUID user_id;
 
     private String username;
-    private  String email;
-    private  String password;
+    private String email;
+    private String password;
 
-    public Users(UUID user_id, String username, String email, String password) {
-        this.user_id = user_id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_info_id",referencedColumnName = "id")
+    private UserInfo userInfo;
+
+
+    public Users(String username, String email, String password, UserInfo userInfo) {
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public Users() {
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "user_id=" + user_id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+        this.userInfo = userInfo;
     }
 
     public UUID getUser_id() {
@@ -65,5 +58,24 @@ public class Users {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "user_id=" + user_id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", userInfo=" + userInfo +
+                '}';
     }
 }
