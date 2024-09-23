@@ -1,17 +1,10 @@
-package com.ase.project.nutri_fit_app.model;
+package com.ase.project.nutri_fit_app.dto;
 
+public class UserInfoDto {
 
-import jakarta.persistence.*;
+    private String username;
+    private String email;
 
-import java.util.UUID;
-
-@Entity
-@Table(name = "user_info")
-public class UserInfo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
     private double height;
     private double weight;
     private int age;
@@ -30,13 +23,10 @@ public class UserInfo {
 
     private double reqd_carbs;
 
-    @OneToOne(mappedBy = "userInfo")
-    private Users users;
+    public UserInfoDto(String username, String email,  double height, double weight, int age, String gender, String activity_level, String goal, double total_cal_intake, double reqd_protein, double reqd_fat, double reqd_carbs) {
+        this.username = username;
+        this.email = email;
 
-    public UserInfo() {
-    }
-
-    public UserInfo(double height, double weight, int age, String gender, String activity_level, String goal, double total_cal_intake, double reqd_protein, double reqd_fat, double reqd_carbs) {
         this.height = height;
         this.weight = weight;
         this.age = age;
@@ -49,45 +39,25 @@ public class UserInfo {
         this.reqd_carbs = reqd_carbs;
     }
 
-    public UUID getId() {
-        return id;
+    public UserInfoDto() {
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public String getUsername() {
+        return username;
     }
 
-    public String getActivity_level() {
-        return activity_level;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setActivity_level(String activity_level) {
-        this.activity_level = activity_level;
+    public String getEmail() {
+        return email;
     }
 
-    public String getGoal() {
-        return goal;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setGoal(String goal) {
-        this.goal = goal;
-    }
-
-    public UUID getUser_info_id() {
-        return id;
-    }
-
-    public Users getUsers() {
-        return users;
-    }
-
-    public void setUsers(Users users) {
-        this.users = users;
-    }
-
-    public void setUser_info_id(UUID id) {
-        this.id = id;
-    }
 
     public double getHeight() {
         return height;
@@ -121,6 +91,22 @@ public class UserInfo {
         this.gender = gender;
     }
 
+    public String getActivity_level() {
+        return activity_level;
+    }
+
+    public void setActivity_level(String activity_level) {
+        this.activity_level = activity_level;
+    }
+
+    public String getGoal() {
+        return goal;
+    }
+
+    public void setGoal(String goal) {
+        this.goal = goal;
+    }
+
     public double getTotal_cal_intake() {
         return total_cal_intake;
     }
@@ -151,23 +137,5 @@ public class UserInfo {
 
     public void setReqd_carbs(double reqd_carbs) {
         this.reqd_carbs = reqd_carbs;
-    }
-
-    @Override
-    public String toString() {
-        return "UserInfo{" +
-                "id=" + id +
-                ", height=" + height +
-                ", weight=" + weight +
-                ", age=" + age +
-                ", gender='" + gender + '\'' +
-                ", activity_level='" + activity_level + '\'' +
-                ", goal='" + goal + '\'' +
-                ", total_cal_intake=" + total_cal_intake +
-                ", reqd_protein=" + reqd_protein +
-                ", reqd_fat=" + reqd_fat +
-                ", reqd_carbs=" + reqd_carbs +
-                ", users=" + users +
-                '}';
     }
 }
