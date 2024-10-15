@@ -3,8 +3,9 @@ import './App.css';
 import Signup from './Components/Signup';
 import SignupNavbar from './Components/SignupNavbar'; */
 import Navbar from './Components/Navbar';
-import UserProfile from './Components/UserProfile';
-
+/* import UserProfile from './Components/UserProfile';
+import MealGenerator from './Components/MealGenerator'; */
+import MealLoging from './Components/MealLoging';
 
 function App() {
   return (
@@ -13,7 +14,9 @@ function App() {
     <Signup></Signup>
     <Login></Login> */}
     <Navbar></Navbar>
-    <UserProfile></UserProfile>
+    <MealLoging></MealLoging>
+{/*     <MealGenerator></MealGenerator>
+    <UserProfile></UserProfile> */}
     </>
   );
 }
