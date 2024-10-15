@@ -30,6 +30,11 @@ public class UserController {
 
         try{
 
+            if(userService.checkIfUsernameExists(userSignUpDto.getUsername())){
+                return new ResponseEntity<>("Username already exists!", HttpStatus.BAD_REQUEST);
+
+            }
+
             NutritionalInfoCalcluator nutritionalInfoCalcluator = new NutritionalInfoCalcluator(userSignUpDto.getHeight(),userSignUpDto.getWeight(),userSignUpDto.getAge(),userSignUpDto.getGender(),userSignUpDto.getActivity_level(),userSignUpDto.getActivity_level());
 
             double total_cal_intake = nutritionalInfoCalcluator.calc_calorie();
