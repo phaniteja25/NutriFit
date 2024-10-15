@@ -31,6 +31,7 @@ public class UserService {
         return userRepo.existsByUsername(username);
     }
 
+
 //    public boolean login(String email,String password){
 //        Users currUser = userRepo.findByEmail(email);
 //
@@ -68,4 +69,5 @@ public class UserService {
 
 
     }
+
 }
