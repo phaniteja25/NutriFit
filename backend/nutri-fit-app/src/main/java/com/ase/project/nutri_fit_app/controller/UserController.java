@@ -1,6 +1,7 @@
 package com.ase.project.nutri_fit_app.controller;
 
 
+import com.ase.project.nutri_fit_app.dto.UserInfoDto;
 import com.ase.project.nutri_fit_app.dto.UserLoginDto;
 import com.ase.project.nutri_fit_app.dto.UserSignUpDto;
 import com.ase.project.nutri_fit_app.model.UserInfo;
@@ -12,10 +13,7 @@ import com.ase.project.nutri_fit_app.util.NutritionalInfoCalcluator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -35,6 +33,11 @@ public class UserController {
         try{
             if(userService.isEmailAlreadyInUse(userSignUpDto.getEmail())){
                 return new  ResponseEntity<String>("Account already created! Please Sign In",HttpStatus.ACCEPTED);
+
+            }
+
+            if(userService.checkIfUsernameExists(userSignUpDto.getUsername())){
+                return new ResponseEntity<>("Username already exists!", HttpStatus.BAD_REQUEST);
 
             }
 
@@ -63,22 +66,45 @@ public class UserController {
 
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> user_login(@RequestBody UserLoginDto userLoginDto){
-        try{
-            System.out.println(userLoginDto.toString());
-            if(userService.login(userLoginDto.getEmail(), userLoginDto.getPassword())){
-                return new ResponseEntity<>("Log in Successfull",HttpStatus.ACCEPTED);
-            }
-            else{
-                return new ResponseEntity<>("Wrong Password! Please Try Again",HttpStatus.ACCEPTED);
+//    @PostMapping("/login")
+//    public ResponseEntity<String> user_login(@RequestBody UserLoginDto userLoginDto){
+//        try{
+//            System.out.println(userLoginDto.toString());
+//            if(userService.login(userLoginDto.getEmail(), userLoginDto.getPassword())){
+//                return new ResponseEntity<>("Log in Successfull",HttpStatus.ACCEPTED);
+//            }
+//            else{
+//                return new ResponseEntity<>("Wrong Password! Please Try Again",HttpStatus.ACCEPTED);
+//
+//            }
+//        }
+//
+//        catch (Exception e){
+//            return new ResponseEntity<>("Exception occured"+e,HttpStatus.BAD_REQUEST);
+//
+//        }
+//    }
 
-            }
+
+    @GetMapping("/userinfo/{username}")
+    public ResponseEntity<UserInfoDto> user_info(@PathVariable String username) {
+        UserInfoDto userInfoDto = null;
+        try {
+
+            userInfoDto = userService.get_user_info(username);
+
+            return new ResponseEntity<>(userInfoDto, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(userInfoDto, HttpStatus.BAD_REQUEST);
+
         }
 
-        catch (Exception e){
-            return new ResponseEntity<>("Exception occured"+e,HttpStatus.BAD_REQUEST);
 
-        }
     }
+
+
+
+
+
+
 }
