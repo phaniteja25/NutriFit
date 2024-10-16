@@ -31,10 +31,7 @@ public class UserController {
     public ResponseEntity<String> user_signup(@RequestBody UserSignUpDto userSignUpDto){
 
         try{
-            if(userService.isEmailAlreadyInUse(userSignUpDto.getEmail())){
-                return new  ResponseEntity<String>("Account already created! Please Sign In",HttpStatus.ACCEPTED);
 
-            }
 
             if(userService.checkIfUsernameExists(userSignUpDto.getUsername())){
                 return new ResponseEntity<>("Username already exists!", HttpStatus.BAD_REQUEST);
