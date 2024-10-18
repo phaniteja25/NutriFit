@@ -21,9 +21,41 @@ const Signup = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form Submitted:', formData);
+        // Construct the payload for the API
+        const requestData = {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+            height: parseFloat(formData.height),  // Convert to float (double precision)
+            weight: parseFloat(formData.weight),  // Convert to float (double precision)
+            age: parseInt(formData.age, 10),      // Convert age to an integer
+            gender: formData.gender.toLowerCase(), // Assuming API expects lowercase gender
+            activity_level: formData.activityLevel,
+            goal: formData.goal
+        };
+
+        try {
+            // Send a POST request to the signup API
+            const response = await fetch('http://localhost:8080/user/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (response.ok) {
+                alert('Signup successful!'); // Show success alert
+                // Handle successful signup (e.g., redirect to login page or show success message)
+            } else {
+                const errorMessage = await response.text(); // Get the plain text response
+                alert(`Signup failed: ${errorMessage}`); // Show error alert with message from server
+            }
+        } catch (error) {
+            alert(`An error occurred: ${error.message}`); // Show alert for unexpected errors
+        }
     };
 
     return (
@@ -133,7 +165,7 @@ const Signup = () => {
                             <option value="Gain Weight">Gain Weight</option>
                         </select>
                     </div>
-                    <button className='s-btn' type="submit">SignIn</button>
+                    <button className='s-btn' type="submit">SignUp</button>
                 </form>
             </div>
         </div>
