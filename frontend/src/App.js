@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <SignupNavbar></SignupNavbar>
-      <Signup></Signup>
+      <Login></Login>
       {/* <Login></Login>
       <Navbar />
       <MealLoging /> */}

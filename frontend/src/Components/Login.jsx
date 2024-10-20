@@ -1,6 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Login = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    // Check for token on page load
+    useEffect(() => {
+        const savedToken = localStorage.getItem('token');
+        if (savedToken) {
+            setIsLoggedIn(true); // Set logged-in state
+        }
+    }, []); // Empty dependency array ensures it runs only once on mount
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            alert('You are already logged in!');
+            // Optionally, redirect the user to another page here
+            // e.g., window.location.href = '/dashboard';
+        }
+    }, [isLoggedIn]); // Runs only when isLoggedIn changes
+
     const [formData, setFormData] = useState({
         username: '',
         password: ''
@@ -14,10 +32,38 @@ const Login = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Submit login data
-        console.log('Login Form Submitted:', formData);
+
+        try {
+            const response = await fetch('http://localhost:8080/user/generate-token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.token) {
+                    // Save token to localStorage
+                    localStorage.setItem('token', data.token);
+                    alert('Login successful');
+                    setIsLoggedIn(true); // Set logged-in state after successful login
+                } else {
+                    alert('Something went wrong. Please try again.');
+                }
+            } else if (response.status === 404) {
+                alert('User not found');
+            } else if (response.status === 401) {
+                alert('Wrong credentials');
+            } else {
+                alert('An error occurred. Please try again later.');
+            }
+        } catch (error) {
+            alert('An error occurred. Please check your connection.');
+        }
     };
 
     return (
