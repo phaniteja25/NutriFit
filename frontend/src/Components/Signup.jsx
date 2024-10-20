@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SignupNavbar from './SignupNavbar';
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -12,6 +14,7 @@ const Signup = () => {
         activityLevel: '',
         goal: ''
     });
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,6 +38,7 @@ const Signup = () => {
             activity_level: formData.activityLevel,
             goal: formData.goal
         };
+        navigate('/');
 
         try {
             // Send a POST request to the signup API
@@ -47,6 +51,7 @@ const Signup = () => {
             });
 
             if (response.ok) {
+
                 alert('Signup successful!'); // Show success alert
                 // Handle successful signup (e.g., redirect to login page or show success message)
             } else {
@@ -59,6 +64,8 @@ const Signup = () => {
     };
 
     return (
+        <>
+        <SignupNavbar></SignupNavbar>
         <div className="container">
             <div className="signup-form-container">
                 <h2>Signup</h2>
@@ -169,6 +176,7 @@ const Signup = () => {
                 </form>
             </div>
         </div>
+        </>
     );
 };
 

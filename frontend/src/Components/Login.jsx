@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SignupNavbar from './SignupNavbar';
 
 const Login = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
 
     // Check for token on page load
     useEffect(() => {
@@ -11,13 +14,11 @@ const Login = () => {
         }
     }, []); // Empty dependency array ensures it runs only once on mount
 
-    useEffect(() => {
+/*     useEffect(() => {
         if (isLoggedIn) {
             alert('You are already logged in!');
-            // Optionally, redirect the user to another page here
-            // e.g., window.location.href = '/dashboard';
         }
-    }, [isLoggedIn]); // Runs only when isLoggedIn changes
+    }, [isLoggedIn]); // Runs only when isLoggedIn changes */
 
     const [formData, setFormData] = useState({
         username: '',
@@ -34,7 +35,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        
         try {
             const response = await fetch('http://localhost:8080/user/generate-token', {
                 method: 'POST',
@@ -43,14 +44,16 @@ const Login = () => {
                 },
                 body: JSON.stringify(formData)
             });
-
+            
             if (response.ok) {
                 const data = await response.json();
                 if (data.token) {
-                    // Save token to localStorage
                     localStorage.setItem('token', data.token);
-                    alert('Login successful');
-                    setIsLoggedIn(true); // Set logged-in state after successful login
+                    setTimeout(() => {
+                        navigate('/dashboard');
+                    }, 100); // 100ms delay
+                    setIsLoggedIn(true);
+                    // alert('Login successful');
                 } else {
                     alert('Something went wrong. Please try again.');
                 }
@@ -67,6 +70,8 @@ const Login = () => {
     };
 
     return (
+        <>
+        <SignupNavbar></SignupNavbar>
         <div className="lg-container">
             <div className="login-form-container">
                 <h2>Login</h2>
@@ -99,6 +104,7 @@ const Login = () => {
                 </form>
             </div>
         </div>
+        </>
     );
 };
 
