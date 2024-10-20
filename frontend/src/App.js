@@ -27,14 +27,6 @@ const App = () => {
         />
       </Routes>
     </Router>
-
-{/*       <SignupNavbar></SignupNavbar>
-      <Login></Login> */}
-      {/* <Login></Login>
-      <Navbar />
-      <MealLoging /> */}
-      {/* <MealGenerator></MealGenerator>
-      <UserProfile></UserProfile> */}
     </>
   );
 }
