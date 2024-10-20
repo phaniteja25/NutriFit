@@ -141,7 +141,6 @@ const Signup = () => {
                             <option value="">Select Gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
-                            <option value="Other">Other</option>
                         </select>
                     </div>
                     <div className="form-group">
@@ -153,9 +152,11 @@ const Signup = () => {
                             required
                         >
                             <option value="">Select Activity Level</option>
-                            <option value="Low">Low</option>
-                            <option value="Moderate">Moderate</option>
-                            <option value="High">High</option>
+                            <option value="Sedentary (little or no exercise)">Sedentary (little or no exercise)</option>
+                            <option value="Lightly active (training/sports 2-3 days/week)">Lightly active (training/sports 2-3 days/week)</option>
+                            <option value="Moderately active (training/sports 4-5 days/week)">Moderately active (training/sports 4-5 days/week)</option>
+                            <option value="Very active (training/sports 4-5 days/week)">Very active (training/sports 4-5 days/week)</option>
+                            <option value="Extremely active (twice per day, extra heavy workouts)">Extremely active (twice per day, extra heavy workouts)</option>
                         </select>
                     </div>
                     <div className="form-group">
@@ -167,9 +168,10 @@ const Signup = () => {
                             required
                         >
                             <option value="">Select Goal</option>
-                            <option value="Lose Weight">Lose Weight</option>
-                            <option value="Maintain Weight">Maintain Weight</option>
-                            <option value="Gain Weight">Gain Weight</option>
+                            <option value="Reduce Fat by 30%">Reduce Fat by 30%</option>
+                            <option value="Reduce Fat by 20%">Reduce Fat by 20%</option>
+                            <option value="Reduce Fat by 10%">Reduce Fat by 10%</option>
+                            <option value="Muscle Gain">Muscle Gain</option>
                         </select>
                     </div>
                     <button className='s-btn' type="submit">SignUp</button>
