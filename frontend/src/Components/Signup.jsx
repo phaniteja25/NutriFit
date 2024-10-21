@@ -155,7 +155,7 @@ const Signup = () => {
                             <option value="Sedentary (little or no exercise)">Sedentary (little or no exercise)</option>
                             <option value="Lightly active (training/sports 2-3 days/week)">Lightly active (training/sports 2-3 days/week)</option>
                             <option value="Moderately active (training/sports 4-5 days/week)">Moderately active (training/sports 4-5 days/week)</option>
-                            <option value="Very active (training/sports 4-5 days/week)">Very active (training/sports 4-5 days/week)</option>
+                            <option value="Very active (training/sports 6-7 days/week)">Very active (training/sports 6-7 days/week)</option>
                             <option value="Extremely active (twice per day, extra heavy workouts)">Extremely active (twice per day, extra heavy workouts)</option>
                         </select>
                     </div>
