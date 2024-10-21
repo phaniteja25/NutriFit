@@ -21,6 +21,24 @@ public class UserInfoDto {
 
     private double reqd_fat;
 
+    @Override
+    public String toString() {
+        return "UserInfoDto{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", height=" + height +
+                ", weight=" + weight +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                ", activity_level='" + activity_level + '\'' +
+                ", goal='" + goal + '\'' +
+                ", total_cal_intake=" + total_cal_intake +
+                ", reqd_protein=" + reqd_protein +
+                ", reqd_fat=" + reqd_fat +
+                ", reqd_carbs=" + reqd_carbs +
+                '}';
+    }
+
     private double reqd_carbs;
 
     public UserInfoDto(String username, String email,  double height, double weight, int age, String gender, String activity_level, String goal, double total_cal_intake, double reqd_protein, double reqd_fat, double reqd_carbs) {

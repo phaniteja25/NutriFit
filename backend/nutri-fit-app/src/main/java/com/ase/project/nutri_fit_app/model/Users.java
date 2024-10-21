@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Entity()
@@ -19,6 +20,9 @@ public class Users implements UserDetails {
     private String username;
     private String email;
     private String password;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Meal> meals;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_info_id",referencedColumnName = "id")
@@ -99,6 +103,15 @@ public class Users implements UserDetails {
     public void setUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
     }
+
+    public List<Meal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
+    }
+
 
     @Override
     public String toString() {

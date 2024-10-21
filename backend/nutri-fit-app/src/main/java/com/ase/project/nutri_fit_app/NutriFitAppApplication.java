@@ -10,6 +10,7 @@ public class NutriFitAppApplication {
 		SpringApplication.run(NutriFitAppApplication.class, args);
 
 		System.out.println("Hello Spring Application!! Testing the application agina again");
+
 	}
 
 }

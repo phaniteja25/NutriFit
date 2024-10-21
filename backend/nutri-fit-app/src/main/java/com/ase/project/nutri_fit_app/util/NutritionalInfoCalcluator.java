@@ -2,16 +2,12 @@ package com.ase.project.nutri_fit_app.util;
 
 public class NutritionalInfoCalcluator {
 
-
-    private double height;
-    private double weight;
+    private double height;  // in cm
+    private double weight;  // in kg
     private int age;
     private String gender;
-
     private String activity_level;
-
     private String calorie_control;
-
 
     public NutritionalInfoCalcluator(double height, double weight, int age, String gender, String activity_level, String calorie_control) {
         this.height = height;
@@ -20,147 +16,77 @@ public class NutritionalInfoCalcluator {
         this.gender = gender;
         this.activity_level = activity_level;
         this.calorie_control = calorie_control;
-
     }
-
-    public String getActivity_level() {
-        return activity_level;
-    }
-
-    public void setActivity_level(String activity_level) {
-        this.activity_level = activity_level;
-    }
-
-    public String getCalorie_control() {
-        return calorie_control;
-    }
-
-    public void setCalorie_control(String calorie_control) {
-        this.calorie_control = calorie_control;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(float weight) {
-        this.weight = weight;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-
-    @Override
-    public String toString() {
-        return "CalorieCalculator{" +
-                "height=" + height +
-                ", weight=" + weight +
-                ", age=" + age +
-                ", gender='" + gender + '\'' +
-                '}';
-    }
-
 
     public double calc_calorie() throws Exception {
-       double bmr = calc_bmr();
-       double total_cal_intake = calc_calorie_intake(bmr);
-       return total_cal_intake;
-
+        double bmr = calc_bmr();  // Calculate BMR
+        double total_cal_intake = calc_calorie_intake(bmr);  // Adjust for activity level and goal
+        return total_cal_intake;
     }
 
-    public double calc_bmr() throws Exception {
-        double res = 0.0;
-
-        if (gender.equals("male")){
-
-            res = 66.47 + 13.75*weight + 5.00*height - 6.78*age;
-
-        }
-        else if(gender.equals("female")){
-            res = 65.1 + 9.56*weight + 1.85*height - 4.68*age;
-
-        }
-        else{
+    private double calc_bmr() throws Exception {
+        if (gender.equalsIgnoreCase("male")) {
+            return 10 * weight + 6.25 * height - 5 * age + 5;
+        } else if (gender.equalsIgnoreCase("female")) {
+            return 10 * weight + 6.25 * height - 5 * age - 161;
+        } else {
             throw new Exception("Gender must be male or female");
         }
-        return res;
     }
 
-    public double calc_calorie_intake(double bmr){
+    private double calc_calorie_intake(double bmr) {
         double activity_multiplier = get_activity_multiplier(activity_level);
         double intake_multiplier = get_calorie_intake_multiplier(calorie_control);
-        double daily_calorie_consumption = bmr * activity_multiplier;
-        double daily_calorie_intake = daily_calorie_consumption * intake_multiplier;
-        return daily_calorie_intake;
+        double tdee = bmr * activity_multiplier;  // Total Daily Energy Expenditure
+        return tdee * intake_multiplier;  // Adjusted for calorie control (fat loss)
     }
 
-    public int get_activity_multiplier(String activity_level) {
-        if (activity_level.equals("Sedentary (little or no exercise)")) {
-            return 1;
-        } else if (activity_level.equals("Lightly active (training/sports 2-3 days/week)")) {
-            return 2;
-        } else if (activity_level.equals("Moderately active (training/sports 4-5 days/week)")) {
-            return 3;
-        } else if (activity_level.equals("Very active (training/sports 6-7 days a week)")) {
-            return 4;
-        } else {
-            return 5;
+    private double get_activity_multiplier(String activity_level) {
+        switch (activity_level) {
+            case "Sedentary (little or no exercise)":
+                return 1.2;
+            case "Lightly active (training/sports 2-3 days/week)":
+                return 1.375;
+            case "Moderately active (training/sports 4-5 days/week)":
+                return 1.55;
+            case "Very active (training/sports 6-7 days a week)":
+                return 1.725;
+            case "Super active (very intense exercise daily)":
+                return 1.9;
+            default:
+                return 1.2;  // Default to sedentary if not specified
         }
     }
 
-        public double get_calorie_intake_multiplier(String calorie_control) {
-            if (calorie_control.equals("Reduce Fat by 30%")) {
+    private double get_calorie_intake_multiplier(String calorie_control) {
+        switch (calorie_control) {
+            case "Reduce Fat by 30%":
                 return 0.70;
-            } else if (calorie_control.equals("Reduce Fat by 20%")) {
-                return 0.75;
-            } else if (calorie_control.equals("Reduce Fat by 10%")) {
+            case "Reduce Fat by 20%":
                 return 0.80;
-            } else {
-                return 1.20;
-            }
+            case "Reduce Fat by 10%":
+                return 0.90;
+            default:  // Default to maintenance or a slight surplus
+                return 1.00;
         }
-
-        public double calc_proteins(){
-        return weight * 2.5;
     }
 
-    public double calc_fats(){
-        return weight * 1.0;
+    public double calc_proteins() {
+        // Protein intake: 1.6 - 2.2 g per kg of body weight (we use 2.0 here)
+        return weight * 2.0;  // g/day
+    }
+
+    public double calc_fats() {
+        // Fat intake: 0.8 - 1.0 g per kg of body weight (we use 0.8 here)
+        return weight * 0.8;  // g/day
     }
 
     public double calc_carbs() throws Exception {
-       double bmr = calc_bmr();
-       double tdee = calc_calorie_intake(bmr);
-       double carb_cal = tdee - calc_proteins()*4.0 - calc_fats()*9.0;
-       double carbs = carb_cal/4.0;
-       return carbs;
+        double tdee = calc_calorie();  // Total calorie intake
+        double protein_calories = calc_proteins() * 4;  // 4 calories per gram of protein
+        double fat_calories = calc_fats() * 9;  // 9 calories per gram of fat
 
+        double remaining_calories = tdee - protein_calories - fat_calories;
+        return remaining_calories / 4.0;  // 4 calories per gram of carbs
     }
-
-
-
-
-
 }
