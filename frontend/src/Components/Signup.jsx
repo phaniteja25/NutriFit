@@ -156,6 +156,7 @@ const Signup = () => {
                             <option value="Lightly active (training/sports 2-3 days/week)">Lightly active (training/sports 2-3 days/week)</option>
                             <option value="Moderately active (training/sports 4-5 days/week)">Moderately active (training/sports 4-5 days/week)</option>
                             <option value="Very active (training/sports 6-7 days/week)">Very active (training/sports 6-7 days/week)</option>
+                            <option value="Super active (very intense exercise daily)">Super active (very intense exercise daily)</option>
                             <option value="Extremely active (twice per day, extra heavy workouts)">Extremely active (twice per day, extra heavy workouts)</option>
                         </select>
                     </div>
@@ -171,7 +172,7 @@ const Signup = () => {
                             <option value="Reduce Fat by 30%">Reduce Fat by 30%</option>
                             <option value="Reduce Fat by 20%">Reduce Fat by 20%</option>
                             <option value="Reduce Fat by 10%">Reduce Fat by 10%</option>
-                            <option value="Muscle Gain">Muscle Gain</option>
+                            <option value="Muscle Gain">Maintenance or a Slight Surplus</option>
                         </select>
                     </div>
                     <button className='s-btn' type="submit">SignUp</button>
