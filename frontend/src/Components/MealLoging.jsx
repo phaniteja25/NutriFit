@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Navbar from './Navbar';
 
 function MealLoging(){
         const [mealInputs, setMealInputs] = useState([1]);
@@ -12,6 +13,7 @@ function MealLoging(){
     };
     return(
         <>
+        <Navbar />
         <div className="meal-log-container">
         <h2>Meal Log</h2>
         {mealInputs.map((input, index) => (

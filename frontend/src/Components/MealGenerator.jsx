@@ -1,8 +1,10 @@
 import React from "react";
+import Navbar from './Navbar';
 
 function MealGenerator(){
     return(
         <>
+        <Navbar />
         <div className="container">
         <div className="form-group">
         <label>Days</label>
