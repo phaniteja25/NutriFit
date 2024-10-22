@@ -5,7 +5,7 @@ const SignupNavbar = () => {
   return (
     <div className="navbar-container">
       <div className="navbar-header">
-        <h1>NutriFit</h1>
+        <h1>NutriNova</h1>
       </div>
       <div className="navbar-links">
         <a href="/">Login</a>

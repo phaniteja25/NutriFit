@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <div className="navbar-container">
       <div className="navbar-header">
-        <h1>NutriFit</h1>
+        <h1>NutriNova</h1>
       </div>
       <div className = "navbar-contents">
       <div className = "profile-logo"><Link to = "/userprofile"><img src ={profilepic} alt = "profile" className="logo"/></Link></div>

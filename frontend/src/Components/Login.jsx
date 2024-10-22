@@ -14,11 +14,11 @@ const Login = () => {
         }
     }, []); // Empty dependency array ensures it runs only once on mount
 
-/*     useEffect(() => {
+    useEffect(() => {
         if (isLoggedIn) {
-            alert('You are already logged in!');
+            // alert('You are already logged in!');
         }
-    }, [isLoggedIn]); // Runs only when isLoggedIn changes */
+    }, [isLoggedIn]); // Runs only when isLoggedIn changes
 
     const [formData, setFormData] = useState({
         username: '',
