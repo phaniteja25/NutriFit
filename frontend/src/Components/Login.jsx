@@ -1,6 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SignupNavbar from './SignupNavbar';
 
 const Login = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
+
+    // Check for token on page load
+    useEffect(() => {
+        const savedToken = localStorage.getItem('token');
+        if (savedToken) {
+            setIsLoggedIn(true); // Set logged-in state
+        }
+    }, []); // Empty dependency array ensures it runs only once on mount
+
+/*     useEffect(() => {
+        if (isLoggedIn) {
+            alert('You are already logged in!');
+        }
+    }, [isLoggedIn]); // Runs only when isLoggedIn changes */
+
     const [formData, setFormData] = useState({
         username: '',
         password: ''
@@ -14,13 +33,45 @@ const Login = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Submit login data
-        console.log('Login Form Submitted:', formData);
+        
+        try {
+            const response = await fetch('http://localhost:8080/user/generate-token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    setTimeout(() => {
+                        navigate('/dashboard');
+                    }, 100); // 100ms delay
+                    setIsLoggedIn(true);
+                    // alert('Login successful');
+                } else {
+                    alert('Something went wrong. Please try again.');
+                }
+            } else if (response.status === 404) {
+                alert('User not found');
+            } else if (response.status === 401) {
+                alert('Wrong credentials');
+            } else {
+                alert('An error occurred. Please try again later.');
+            }
+        } catch (error) {
+            alert('An error occurred. Please check your connection.');
+        }
     };
 
     return (
+        <>
+        <SignupNavbar></SignupNavbar>
         <div className="lg-container">
             <div className="login-form-container">
                 <h2>Login</h2>
@@ -53,6 +104,7 @@ const Login = () => {
                 </form>
             </div>
         </div>
+        </>
     );
 };
 

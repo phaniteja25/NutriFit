@@ -1,6 +1,8 @@
 package com.ase.project.nutri_fit_app.controller;
 
 
+import com.ase.project.nutri_fit_app.config.JwtUtils;
+import com.ase.project.nutri_fit_app.dto.UpdateUserInfoDto;
 import com.ase.project.nutri_fit_app.dto.UserInfoDto;
 import com.ase.project.nutri_fit_app.dto.UserLoginDto;
 import com.ase.project.nutri_fit_app.dto.UserSignUpDto;
@@ -25,6 +27,9 @@ public class UserController {
     @Autowired
     private UserInfoService userInfoService;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
 
 
     @PostMapping("/signup")
@@ -38,7 +43,7 @@ public class UserController {
 
             }
 
-            NutritionalInfoCalcluator nutritionalInfoCalcluator = new NutritionalInfoCalcluator(userSignUpDto.getHeight(),userSignUpDto.getWeight(),userSignUpDto.getAge(),userSignUpDto.getGender(),userSignUpDto.getActivity_level(),userSignUpDto.getActivity_level());
+            NutritionalInfoCalcluator nutritionalInfoCalcluator = new NutritionalInfoCalcluator(userSignUpDto.getHeight(),userSignUpDto.getWeight(),userSignUpDto.getAge(),userSignUpDto.getGender(),userSignUpDto.getActivity_level(),userSignUpDto.getGoal());
 
             double total_cal_intake = nutritionalInfoCalcluator.calc_calorie();
             double proteins_intake = nutritionalInfoCalcluator.calc_proteins();
@@ -83,10 +88,13 @@ public class UserController {
 //    }
 
 
-    @GetMapping("/userinfo/{username}")
-    public ResponseEntity<UserInfoDto> user_info(@PathVariable String username) {
+    // endpoint for profile dashboard
+    @GetMapping("/userinfo")
+    public ResponseEntity<UserInfoDto> user_info(@RequestHeader("Authorization") String token ) {
         UserInfoDto userInfoDto = null;
         try {
+            String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+
 
             userInfoDto = userService.get_user_info(username);
 
@@ -95,7 +103,21 @@ public class UserController {
             return new ResponseEntity<>(userInfoDto, HttpStatus.BAD_REQUEST);
 
         }
+    }
 
+    @PutMapping("/update_user_info")
+    public ResponseEntity<UserInfoDto> update_info(@RequestHeader("Authorization") String token,@RequestBody UpdateUserInfoDto updateUserInfoDto){
+
+        String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+        UserInfoDto userInfoDto = null;
+        try {
+             userInfoDto = userService.update_user_info(username, updateUserInfoDto);
+        }
+        catch (Exception e){
+            System.out.println("Exception occured"+e);
+        }
+
+        return ResponseEntity.ok(userInfoDto);
 
     }
 
