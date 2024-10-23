@@ -52,12 +52,13 @@ const MealItem = ({ meal, onDelete }) => {
               <td className="py-3 pr-8 font-medium text-gray-600">Serving Size</td>
               <td className="py-3 text-gray-800">{meal.serving_size} g</td>
             </tr>
-            <tr>
-              <td className="py-3 pr-8 font-medium text-gray-600">Logged Time</td>
-              <td className="py-3 text-gray-800">{new Date(meal.log_time).toLocaleString()}</td>
-            </tr>
           </tbody>
         </table>
+      </div>
+
+      {/* Displaying logged time at the bottom right of the card */}
+      <div className="absolute bottom-4 right-4 text-gray-300 text-sm italic mt-2">
+        logged at {new Date(meal.log_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
       </div>
     </div>
   );

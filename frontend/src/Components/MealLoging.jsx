@@ -1,58 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import MealItem from './MealItem';
 
-const MealLogging = () => {
+const MealLoging = () => {
   const [mealsByDate, setMealsByDate] = useState({});
-  const [mealInputs, setMealInputs] = useState([{ id: 1, text: '' }]); // Store text input along with id
+  const [mealInput, setMealInput] = useState('');
 
-  const addMealInput = () => {
-    setMealInputs([...mealInputs, { id: mealInputs.length + 1, text: '' }]); // Update to use an object with text
-  };
-
-  const removeMealInput = (index) => {
-    setMealInputs(mealInputs.filter((_, i) => i !== index));
+  // Function to format date from YYYY-MM-DD to 'Month Day, Year'
+  const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split('-');
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
   };
 
   // Fetch meal data from the API
-  useEffect(() => {
-    const fetchMeals = async () => {
-      try {
-        const token = localStorage.getItem('token');
+  const fetchMeals = async () => {
+    try {
+      const token = localStorage.getItem('token');
 
-        if (!token) {
-          console.error('No token found');
-          return;
-        }
-
-        const response = await fetch('http://localhost:8080/api/meals/get_all_meals', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch meals');
-        }
-
-        const data = await response.json();
-
-        // Group meals by date
-        const groupedMeals = data.reduce((acc, curr) => {
-          const date = curr.date;
-          if (!acc[date]) {
-            acc[date] = [];
-          }
-          acc[date].push(...curr.meals);
-          return acc;
-        }, {});
-
-        setMealsByDate(groupedMeals);
-      } catch (error) {
-        console.error('Error fetching meals:', error);
+      if (!token) {
+        console.error('No token found');
+        return;
       }
-    };
 
+      const response = await fetch('http://localhost:8080/api/meals/get_all_meals', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch meals');
+      }
+
+      const data = await response.json();
+
+      // Group meals by date
+      const groupedMeals = data.reduce((acc, curr) => {
+        const date = curr.date; // YYYY-MM-DD format
+        const formattedDate = formatDate(date); // Convert to 'Month Day, Year' format
+        if (!acc[formattedDate]) {
+          acc[formattedDate] = [];
+        }
+        acc[formattedDate].push(...curr.meals);
+        return acc;
+      }, {});
+
+      setMealsByDate(groupedMeals);
+    } catch (error) {
+      console.error('Error fetching meals:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchMeals();
   }, []);
 
@@ -93,13 +96,12 @@ const MealLogging = () => {
     }
   };
 
-  const handleInputChange = (index, value) => {
-    const updatedInputs = [...mealInputs];
-    updatedInputs[index].text = value; // Update the text for the specific input
-    setMealInputs(updatedInputs);
-  };
+  const handleSaveMeal = async () => {
+    if (!mealInput.trim()) {
+      alert('Please enter a meal item.');
+      return;
+    }
 
-  const handleSaveMeals = async () => {
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -107,33 +109,27 @@ const MealLogging = () => {
       return;
     }
 
-    for (const input of mealInputs) {
-      if (!input.text.trim()) {
-        alert('Please enter a meal description before saving.');
-        return; // Exit if any input is empty
+    try {
+      const response = await fetch(`http://localhost:8080/api/meals/log?prompt=${encodeURIComponent(mealInput)}`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save meal');
       }
 
-      try {
-        const response = await fetch(`http://localhost:8080/api/meals/log?prompt=${encodeURIComponent(input.text)}`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json', // Optional, based on your API requirements
-          },
-        });
+      // Clear the input field after successful save
+      setMealInput('');
 
-        if (!response.ok) {
-          throw new Error('Failed to save meal');
-        }
-
-        // Optionally, you could handle the response here if needed
-      } catch (error) {
-        console.error('Error saving meal:', error);
-      }
+      // Reload the meals list after adding a new meal
+      fetchMeals();
+    } catch (error) {
+      console.error('Error saving meal:', error);
     }
-
-    // Optionally clear the inputs after saving
-    setMealInputs([{ id: 1, text: '' }]);
   };
 
   return (
@@ -142,34 +138,16 @@ const MealLogging = () => {
         {/* Add Meal Section */}
         <div className="bg-white rounded-xl shadow-xl p-8 mb-8 border border-gray-100">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Meal</h2>
-          {mealInputs.map((input, index) => (
-            <div key={input.id} className="mb-4 flex items-start gap-4">
-              <textarea
-                value={input.text} // Set the value to the corresponding text
-                onChange={(e) => handleInputChange(index, e.target.value)} // Update text on change
-                placeholder="ADD FOOD ITEM...."
-                className="flex-grow p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none h-24 transition-all duration-200"
-              />
-              <div className="flex flex-col gap-2">
-                <button
-                  onClick={addMealInput}
-                  className="w-10 h-10 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-md transition-colors duration-200 text-xl"
-                >
-                  +
-                </button>
-                {mealInputs.length > 1 && (
-                  <button
-                    onClick={() => removeMealInput(index)}
-                    className="w-10 h-10 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-md transition-colors duration-200 text-xl"
-                  >
-                    -
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
+          <div className="mb-4">
+            <textarea
+              value={mealInput}
+              onChange={(e) => setMealInput(e.target.value)}
+              placeholder="ADD FOOD ITEM...."
+              className="flex-grow p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none h-24 transition-all duration-200"
+            />
+          </div>
           <button
-            onClick={handleSaveMeals} // Call the save function on click
+            onClick={handleSaveMeal}
             className="mt-6 px-8 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-md transition-colors duration-200 font-semibold"
           >
             Save
@@ -177,19 +155,26 @@ const MealLogging = () => {
         </div>
 
         {/* Existing Meals Section */}
-        {Object.keys(mealsByDate).map(date => (
-          <div key={date} className="bg-white rounded-xl shadow-xl p-8 mb-6 border border-gray-100">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6">{date}</h2>
-            <div className="space-y-6">
-              {mealsByDate[date].map(meal => (
-                <MealItem key={meal.mealID} meal={meal} onDelete={handleDeleteMeal} />
-              ))}
-            </div>
+        {Object.keys(mealsByDate).length === 0 ? (
+          <div className="bg-white rounded-xl shadow-xl p-8 mb-6 border border-gray-100">
+            <h2 className="text-2xl font-semibold text-gray-800">No meals added yet!</h2>
+            <p className="text-gray-400">Start logging your meals by adding them above.</p>
           </div>
-        ))}
+        ) : (
+          Object.keys(mealsByDate).map(date => (
+            <div key={date} className="bg-white rounded-xl shadow-xl p-8 mb-6 border border-gray-100">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">{date}</h2>
+              <div className="space-y-6">
+                {mealsByDate[date].map(meal => (
+                  <MealItem key={meal.mealID} meal={meal} onDelete={handleDeleteMeal} />
+                ))}
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
 };
 
-export default MealLogging;
+export default MealLoging;

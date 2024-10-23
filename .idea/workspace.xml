@@ -4,17 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d7b7560-920f-4cde-97dc-d158a7e0295e" name="Changes" comment="Login Api Implemented with alert and token saved">
-      <change afterPath="$PROJECT_DIR$/frontend/postcss.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/Components/MealItem.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/tailwind.config.js" afterDir="false" />
+    <list default="true" id="3d7b7560-920f-4cde-97dc-d158a7e0295e" name="Changes" comment="Meal Add, Get and Delete completed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/Dashobard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/Dashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/MealItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/MealItem.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/Components/MealLoging.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/MealLoging.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,12 +107,21 @@
       <option name="project" value="LOCAL" />
       <updated>1729383839273</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Meal Add, Get and Delete completed">
+      <option name="closed" value="true" />
+      <created>1729719527348</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1729719527348</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Signup Api Implemented with alert" />
     <MESSAGE value="Login Api Implemented with alert and token saved" />
-    <option name="LAST_COMMIT_MESSAGE" value="Login Api Implemented with alert and token saved" />
+    <MESSAGE value="Meal Add, Get and Delete completed" />
+    <option name="LAST_COMMIT_MESSAGE" value="Meal Add, Get and Delete completed" />
   </component>
 </project>
