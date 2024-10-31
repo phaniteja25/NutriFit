@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import AboutUs from './Components/AboutUs';
-import Dashboard from './Components/Dashobard';
+import Dashboard from './Components/Dashboard';
 import Login from './Components/Login';
 import MealGenerator from './Components/MealGenerator';
 import MealLoging from './Components/MealLoging';
