@@ -7,11 +7,6 @@
     <list default="true" id="3d7b7560-920f-4cde-97dc-d158a7e0295e" name="Changes" comment="Meals screen completed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
-    <list default="true" id="3d7b7560-920f-4cde-97dc-d158a7e0295e" name="Changes" comment="Meal Add, Get and Delete completed">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/MealItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/MealItem.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/MealLoging.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/MealLoging.jsx" afterDir="false" />
-    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -127,15 +122,6 @@
       <updated>1729721076827</updated>
     </task>
     <option name="localTasksCounter" value="6" />
-    <task id="LOCAL-00004" summary="Meal Add, Get and Delete completed">
-      <option name="closed" value="true" />
-      <created>1729719527348</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1729719527348</updated>
-    </task>
-    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -143,6 +129,7 @@
     <MESSAGE value="Login Api Implemented with alert and token saved" />
     <MESSAGE value="Meal Add, Get and Delete completed" />
     <MESSAGE value="Meals screen completed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Meals screen completed" />
+    <MESSAGE value="workplace" />
+    <option name="LAST_COMMIT_MESSAGE" value="workplace" />
   </component>
 </project>
