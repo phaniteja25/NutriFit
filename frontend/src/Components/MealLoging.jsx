@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import MealItem from './MealItem';
+import Navbar from './Navbar';
 
 const MealLoging = () => {
   const [mealsByDate, setMealsByDate] = useState({});
@@ -133,6 +134,8 @@ const MealLoging = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen bg-gray-200 py-8">
       <div className="max-w-5xl mx-auto px-6 md:px-8">
         {/* Add Meal Section */}
@@ -174,6 +177,7 @@ const MealLoging = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
