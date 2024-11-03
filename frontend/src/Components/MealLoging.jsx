@@ -6,7 +6,6 @@ const MealLoging = () => {
   const [mealsByDate, setMealsByDate] = useState({});
   const [mealInput, setMealInput] = useState('');
 
-  // Function to format date from YYYY-MM-DD to 'Month Day, Year'
   const formatDate = (dateString) => {
     const [year, month, day] = dateString.split('-');
     const monthNames = [
@@ -16,7 +15,6 @@ const MealLoging = () => {
     return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
   };
 
-  // Fetch meal data from the API
   const fetchMeals = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -39,10 +37,9 @@ const MealLoging = () => {
 
       const data = await response.json();
 
-      // Group meals by date
       const groupedMeals = data.reduce((acc, curr) => {
-        const date = curr.date; // YYYY-MM-DD format
-        const formattedDate = formatDate(date); // Convert to 'Month Day, Year' format
+        const date = curr.date;
+        const formattedDate = formatDate(date);
         if (!acc[formattedDate]) {
           acc[formattedDate] = [];
         }
