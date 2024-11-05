@@ -152,10 +152,13 @@ public class UserService {
         userInfo.setWeight(new_weight);
         userInfo.setHeight(new_height);
         userInfo.setAge(new_age);
+        userInfo.setActivity_level(new_activity_level);
+        userInfo.setGoal(new_goal);
         userInfo.setTotal_cal_intake(calculator.calc_calorie());
         userInfo.setReqd_protein(calculator.calc_proteins());
         userInfo.setReqd_fat(calculator.calc_fats());
         userInfo.setReqd_carbs(calculator.calc_carbs());
+
 
         // Ensure the relationship consistency (if needed)
         userInfo.setUsers(user); // Set the user back to UserInfo to maintain bidirectional consistency

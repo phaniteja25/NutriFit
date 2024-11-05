@@ -28,15 +28,18 @@ public class Users implements UserDetails {
     @JoinColumn(name = "user_info_id",referencedColumnName = "id")
     private UserInfo userInfo;
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<MealPlan> mealPlans;
 
-    public Users(String username, String email, String password, UserInfo userInfo) {
+
+    public Users(UUID user_id, String username, String email, String password, List<Meal> meals, UserInfo userInfo, List<MealPlan> mealPlans) {
+        this.user_id = user_id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.meals = meals;
         this.userInfo = userInfo;
-    }
-
-    public Users() {
+        this.mealPlans = mealPlans;
     }
 
     public UUID getUser_id() {
@@ -53,22 +56,22 @@ public class Users implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return UserDetails.super.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return UserDetails.super.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return UserDetails.super.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return UserDetails.super.isEnabled();
     }
 
     public void setUsername(String username) {
@@ -83,9 +86,10 @@ public class Users implements UserDetails {
         this.email = email;
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return null;
     }
 
     public String getPassword() {
@@ -96,14 +100,6 @@ public class Users implements UserDetails {
         this.password = password;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
-
     public List<Meal> getMeals() {
         return meals;
     }
@@ -112,15 +108,22 @@ public class Users implements UserDetails {
         this.meals = meals;
     }
 
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
 
-    @Override
-    public String toString() {
-        return "Users{" +
-                "user_id=" + user_id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", userInfo=" + userInfo +
-                '}';
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public List<MealPlan> getMealPlan() {
+        return mealPlans;
+    }
+
+    public void setMealPlan(List<MealPlan> mealPlan) {
+        this.mealPlans = mealPlans;
+    }
+
+    public Users() {
     }
 }
