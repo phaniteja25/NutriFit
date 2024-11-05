@@ -54,7 +54,12 @@ public class UserController {
 
             UserInfo userInfo1 = userInfoService.save_user_info(userInfo);
 
-            Users user  = new Users(userSignUpDto.getUsername(),userSignUpDto.getEmail(),userSignUpDto.getPassword(),userInfo);
+            Users user = new Users();
+            user.setUsername(userSignUpDto.getUsername());
+            user.setEmail(userSignUpDto.getEmail());
+            user.setPassword(userSignUpDto.getPassword());
+            user.setUserInfo(userInfo);
+
 
             Users signedup_user = userService.register(user);
 
