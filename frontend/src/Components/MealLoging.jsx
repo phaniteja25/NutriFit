@@ -6,31 +6,23 @@ const MealLoging = () => {
   const [mealsByDate, setMealsByDate] = useState({});
   const [mealInput, setMealInput] = useState('');
 
-  // Function to format date from YYYY-MM-DD to 'Month Day, Year'
   const formatDate = (dateString) => {
     const [year, month, day] = dateString.split('-');
-    const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
   };
 
-  // Fetch meal data from the API
   const fetchMeals = async () => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+
     try {
-      const token = localStorage.getItem('token');
-
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-
-      const response = await fetch('http://localhost:8080/api/meals/get_all_meals', {
-        method: 'GET',
+      const response = await fetch('http://localhost:8080/api/meals/get_current_day_meals', {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) {
@@ -40,21 +32,21 @@ const MealLoging = () => {
       const data = await response.json();
 
       // Group meals by date
-      const groupedMeals = data.reduce((acc, curr) => {
-        const date = curr.date; // YYYY-MM-DD format
-        const formattedDate = formatDate(date); // Convert to 'Month Day, Year' format
-        if (!acc[formattedDate]) {
-          acc[formattedDate] = [];
+      const mealsByDate = data.reduce((acc, meal) => {
+        const date = meal.log_date;
+        if (!acc[date]) {
+          acc[date] = [];
         }
-        acc[formattedDate].push(...curr.meals);
+        acc[date].push(meal);
         return acc;
       }, {});
 
-      setMealsByDate(groupedMeals);
+      setMealsByDate(mealsByDate);
     } catch (error) {
       console.error('Error fetching meals:', error);
     }
   };
+
 
   useEffect(() => {
     fetchMeals();
@@ -69,6 +61,14 @@ const MealLoging = () => {
     }
 
     try {
+        const mealToDelete = Object.values(mealsByDate)
+          .flat()
+          .find(meal => meal.mealID === mealID);
+
+        if (!mealToDelete) {
+          console.error('Meal not found');
+          return;
+        }
       const response = await fetch(`http://localhost:8080/api/meals/delete_meal/${mealID}`, {
         method: 'DELETE',
         headers: {
@@ -92,6 +92,7 @@ const MealLoging = () => {
         }
         return updatedMeals;
       });
+    alert(`Deleted meal: ${mealToDelete.mealName}`);
     } catch (error) {
       console.error('Error deleting meal:', error);
     }
@@ -123,6 +124,17 @@ const MealLoging = () => {
         throw new Error('Failed to save meal');
       }
 
+      const data = await response.json();
+
+      // Check if the response is an empty array
+      if (data.length === 0) {
+        alert('Invalid Input: No items were added.');
+      } else {
+        // Get the meal names from the response and create an alert message
+        const addedMeals = data.map(meal => meal.mealName).join(', ');
+        alert(`Added items: ${addedMeals}`);
+      }
+
       // Clear the input field after successful save
       setMealInput('');
 
@@ -132,6 +144,8 @@ const MealLoging = () => {
       console.error('Error saving meal:', error);
     }
   };
+
+
 
   return (
     <>
@@ -151,7 +165,10 @@ const MealLoging = () => {
           </div>
           <button
             onClick={handleSaveMeal}
-            className="mt-6 px-8 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-md transition-colors duration-200 font-semibold"
+            disabled={!mealInput.trim()} // Disable button when mealInput is empty
+            className={`mt-6 px-8 py-3 text-white rounded-lg shadow-md transition-colors duration-200 font-semibold ${
+              mealInput.trim() ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed'
+            }`}
           >
             Save
           </button>
@@ -164,11 +181,11 @@ const MealLoging = () => {
             <p className="text-gray-400">Start logging your meals by adding them above.</p>
           </div>
         ) : (
-          Object.keys(mealsByDate).map(date => (
+          Object.keys(mealsByDate).reverse().map(date => ( // Reverse order of dates
             <div key={date} className="bg-white rounded-xl shadow-xl p-8 mb-6 border border-gray-100">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6">{date}</h2>
               <div className="space-y-6">
-                {mealsByDate[date].map(meal => (
+                {mealsByDate[date].slice().reverse().map(meal => ( // Reverse order of meals for each date
                   <MealItem key={meal.mealID} meal={meal} onDelete={handleDeleteMeal} />
                 ))}
               </div>

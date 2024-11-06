@@ -3,6 +3,7 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import './App.css';
 import AboutUs from './Components/AboutUs';
 import Dashboard from './Components/Dashboard';
+// import Dashboard1 from './Components/Dashboard1';
 import Login from './Components/Login';
 import MealGenerator from './Components/MealGenerator';
 import MealLoging from './Components/MealLoging';
@@ -26,6 +27,7 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Dashboard />
+              {/* <Dashboard1 /> */}
             </ProtectedRoute>
           }
         />

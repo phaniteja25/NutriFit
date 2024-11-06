@@ -1,14 +1,13 @@
 import React from 'react';
-import { FaTrash } from 'react-icons/fa'; // Importing a trash icon from react-icons
+import { FaTrash } from 'react-icons/fa';
 
 const MealItem = ({ meal, onDelete }) => {
-  // Format meal name to capitalize only the first word
   const formatMealName = (name) => {
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
   };
 
   const handleDelete = () => {
-    onDelete(meal.mealID); // Call the delete function with mealID
+    onDelete(meal.mealID);
   };
 
   return (
