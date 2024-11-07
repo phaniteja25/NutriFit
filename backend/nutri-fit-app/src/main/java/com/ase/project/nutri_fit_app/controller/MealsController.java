@@ -52,7 +52,7 @@ public class MealsController {
             List<Meal> mealList = mealService.log_meal(apiResponseJson, username);
 
             if (!mealList.isEmpty()) {
-                return ResponseEntity.ok(mealList); // Return the list of meals if not empty
+                return ResponseEntity.status(HttpStatus.CREATED).body(mealList); // Return the list of meals if not empty
             } else {
                 return ResponseEntity.ok(new ArrayList<>()); // Return an empty list if meals could not be logged
             }
@@ -64,20 +64,39 @@ public class MealsController {
 
 
     @GetMapping("/get_current_day_meals")
-    public ResponseEntity<List<Meal>> get_current_day_meals(@RequestHeader("Authorization") String token) {
-        String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
-        LocalDate current_date = LocalDate.now();
-
-        List<Meal> result = null;
+    public ResponseEntity<?> getCurrentDayMeals(@RequestHeader("Authorization") String token) {
         try {
-            result = mealService.get_log_meals_for_today(username, current_date);
+            // Check if token is present and valid
+            if (token == null || !token.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Authorization token is missing or invalid.");
+            }
+
+            String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+            LocalDate currentDate = LocalDate.now();
+
+            List<Meal> result = mealService.get_log_meals_for_today(username, currentDate);
+
+            if (result == null || result.isEmpty()) {
+                // Return 404 if no meals are found for the day
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No meals found for the current day.");
+            }
+
+            // Return 200 OK with the list of meals
+            return ResponseEntity.ok(result);
+
         } catch (Exception e) {
-            System.out.println("Exception Occured" + e);
+            // Log the exception for debugging
+            System.out.println("Exception Occurred: " + e);
 
+            // Return 500 for any other server error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while fetching the meals.");
         }
-        return ResponseEntity.ok(result);
-
     }
+
+
 
 
     @PostMapping("/update_meal/{meal_id}")
@@ -103,74 +122,152 @@ public class MealsController {
     }
 
     @DeleteMapping("/delete_meal/{meal_id}")
-    public ResponseEntity<String> delete_meal(@RequestHeader("Authorization") String token, @PathVariable UUID meal_id) {
-        String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
-
-        boolean delete_result = false;
+    public ResponseEntity<String> deleteMeal(@RequestHeader("Authorization") String token, @PathVariable UUID meal_id) {
         try {
-            delete_result = mealService.delete_given_meal(username, meal_id);
+            // Check if token is present and valid
+            if (token == null || !token.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Authorization token is missing or invalid.");
+            }
 
+            String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+            boolean deleteResult = mealService.delete_given_meal(username, meal_id);
 
+            if (deleteResult) {
+                // Return 200 OK if deletion was successful
+                return ResponseEntity.ok("Meal deleted successfully.");
+            } else {
+                // Return 404 Not Found if the meal could not be found or deleted
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Meal not found or could not be deleted.");
+            }
+
+        } catch (IllegalArgumentException e) {
+            // Return 400 Bad Request for invalid meal ID
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid meal ID provided.");
         } catch (Exception e) {
-            System.out.println("Exception Occured" + e);
+            // Log the exception for debugging
+            System.out.println("Exception Occurred: " + e);
 
+            // Return 500 Internal Server Error for any other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while deleting the meal.");
         }
-        if (delete_result) {
-            return ResponseEntity.ok("Meal Deleted Succesfully");
-        } else {
-            return ResponseEntity.ok("Error Deleting Meal");
-        }
-
-
     }
+
 
     @GetMapping("/current_day_summary")
-    public ResponseEntity<TotalNutritionalInfo> get_current_nutri_summary(@RequestHeader("Authorization") String token)
-    {
-        LocalDate localDate = LocalDate.now(); // Parse the date from String to LocalDate
-        TotalNutritionalInfo totalNutritionalInfo = null;
+    public ResponseEntity<?> getCurrentNutriSummary(@RequestHeader("Authorization") String token) {
+        try {
+            // Check if token is present and valid
+            if (token == null || !token.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Authorization token is missing or invalid.");
+            }
 
-        String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+            String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+            LocalDate localDate = LocalDate.now();
 
-        try{
-            totalNutritionalInfo = mealService.getNutritionalSummary(username,localDate);
+            // Fetch nutritional summary for the current day
+            TotalNutritionalInfo totalNutritionalInfo = mealService.getNutritionalSummary(username, localDate);
+
+            if (totalNutritionalInfo == null) {
+                // Return 404 if no nutritional information is available for the day
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No nutritional summary found for the current day.");
+            }
+
+            // Return 200 OK with the nutritional summary
+            return ResponseEntity.ok(totalNutritionalInfo);
+
+        } catch (IllegalArgumentException e) {
+            // Return 400 Bad Request for invalid request data
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid data provided.");
+        } catch (Exception e) {
+            // Log the exception for debugging
+            System.out.println("Exception Occurred: " + e);
+
+            // Return 500 Internal Server Error for any other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while retrieving the nutritional summary.");
         }
-        catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-        return ResponseEntity.ok(totalNutritionalInfo);
-
     }
+
 
 
     @GetMapping("/get_all_meals")
-    public List<AllMealsByDateResponseDto> getMealsGroupedByDate(@RequestHeader("Authorization") String token) {
-        String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+    public ResponseEntity<?> getMealsGroupedByDate(@RequestHeader("Authorization") String token) {
+        try {
+            // Check if token is present and valid
+            if (token == null || !token.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Authorization token is missing or invalid.");
+            }
 
-        List<AllMealsByDateResponseDto> allMealsByDateResponseDto = null;
-        try{
-           allMealsByDateResponseDto  = mealService.getMealsGroupedByDate(username);
+            String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+            List<AllMealsByDateResponseDto> allMealsByDateResponseDto = mealService.getMealsGroupedByDate(username);
+
+            if (allMealsByDateResponseDto == null || allMealsByDateResponseDto.isEmpty()) {
+                // Return 404 if no meals are found
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No meals found for the user.");
+            }
+
+            // Return 200 OK with the list of meals grouped by date
+            return ResponseEntity.ok(allMealsByDateResponseDto);
+
+        } catch (IllegalArgumentException e) {
+            // Return 400 Bad Request for invalid request data
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request data.");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // Log the exception for debugging
+            System.out.println("Exception Occurred: " + e);
+
+            // Return 500 Internal Server Error for any other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while retrieving meals.");
         }
-        return allMealsByDateResponseDto;
     }
 
 
     @PostMapping("/manual_log")
-    public ResponseEntity<Meal> manual_log(@RequestHeader ("Authorization") String token ,@RequestBody ManualLoggingDto manualLoggingDto){
-        String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
-
-        Meal meal = null;
-
+    public ResponseEntity<?> manualLog(@RequestHeader("Authorization") String token, @RequestBody ManualLoggingDto manualLoggingDto) {
         try {
-            meal = mealService.log_meal_manually(username, manualLoggingDto);
+            // Check if token is present and valid
+            if (token == null || !token.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Authorization token is missing or invalid.");
+            }
+
+            String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+            Meal meal = mealService.log_meal_manually(username, manualLoggingDto);
+
+            if (meal == null) {
+                // Return 400 Bad Request if meal logging failed (e.g., invalid data)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Meal logging failed due to invalid data.");
+            }
+
+            // Return 201 Created if the meal was logged successfully
+            return ResponseEntity.status(HttpStatus.CREATED).body(meal);
+
+        } catch (IllegalArgumentException e) {
+            // Return 400 Bad Request if request data is invalid
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid data provided for meal logging.");
+        } catch (Exception e) {
+            // Log the exception for debugging
+            System.out.println("Exception Occurred: " + e);
+
+            // Return 500 Internal Server Error for any other exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while logging the meal.");
         }
-        catch (Exception e){
-            System.out.println("Exception Occured"+e);
-        }
-        return  ResponseEntity.ok(meal);
     }
+
 
 
 

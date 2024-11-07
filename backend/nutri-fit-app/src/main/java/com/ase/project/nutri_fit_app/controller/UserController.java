@@ -33,45 +33,71 @@ public class UserController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<String> user_signup(@RequestBody UserSignUpDto userSignUpDto){
-
-        try{
-
-
-            if(userService.checkIfUsernameExists(userSignUpDto.getUsername())){
-                return new ResponseEntity<>("Username already exists!", HttpStatus.BAD_REQUEST);
-
+    public ResponseEntity<String> userSignup(@RequestBody UserSignUpDto userSignUpDto) {
+        try {
+            // Check if the username already exists
+            if (userService.checkIfUsernameExists(userSignUpDto.getUsername())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Username already exists!");
             }
 
-            NutritionalInfoCalcluator nutritionalInfoCalcluator = new NutritionalInfoCalcluator(userSignUpDto.getHeight(),userSignUpDto.getWeight(),userSignUpDto.getAge(),userSignUpDto.getGender(),userSignUpDto.getActivity_level(),userSignUpDto.getGoal());
+            // Calculate nutritional information based on user details
+            NutritionalInfoCalcluator nutritionalInfoCalcluator = new NutritionalInfoCalcluator(
+                    userSignUpDto.getHeight(),
+                    userSignUpDto.getWeight(),
+                    userSignUpDto.getAge(),
+                    userSignUpDto.getGender(),
+                    userSignUpDto.getActivity_level(),
+                    userSignUpDto.getGoal()
+            );
 
-            double total_cal_intake = nutritionalInfoCalcluator.calc_calorie();
-            double proteins_intake = nutritionalInfoCalcluator.calc_proteins();
-            double fats_intake = nutritionalInfoCalcluator.calc_fats();
-            double carbs_intake = nutritionalInfoCalcluator.calc_carbs();
+            double totalCalIntake = nutritionalInfoCalcluator.calc_calorie();
+            double proteinsIntake = nutritionalInfoCalcluator.calc_proteins();
+            double fatsIntake = nutritionalInfoCalcluator.calc_fats();
+            double carbsIntake = nutritionalInfoCalcluator.calc_carbs();
 
-            UserInfo userInfo = new UserInfo(userSignUpDto.getHeight(),userSignUpDto.getWeight(),userSignUpDto.getAge(),userSignUpDto.getGender(),userSignUpDto.getActivity_level(),userSignUpDto.getGoal(),total_cal_intake,proteins_intake,fats_intake,carbs_intake);
+            // Create UserInfo object and save it
+            UserInfo userInfo = new UserInfo(
+                    userSignUpDto.getHeight(),
+                    userSignUpDto.getWeight(),
+                    userSignUpDto.getAge(),
+                    userSignUpDto.getGender(),
+                    userSignUpDto.getActivity_level(),
+                    userSignUpDto.getGoal(),
+                    totalCalIntake,
+                    proteinsIntake,
+                    fatsIntake,
+                    carbsIntake
+            );
 
-            UserInfo userInfo1 = userInfoService.save_user_info(userInfo);
+            UserInfo savedUserInfo = userInfoService.save_user_info(userInfo);
 
+            // Create and save Users object
             Users user = new Users();
             user.setUsername(userSignUpDto.getUsername());
             user.setEmail(userSignUpDto.getEmail());
             user.setPassword(userSignUpDto.getPassword());
-            user.setUserInfo(userInfo);
+            user.setUserInfo(savedUserInfo);
 
+            Users signedUpUser = userService.register(user);
 
-            Users signedup_user = userService.register(user);
+            // Return 201 Created if the user is registered successfully
+            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
 
+        } catch (IllegalArgumentException e) {
+            // Return 400 Bad Request for any validation or input-related issues
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid input data: " + e.getMessage());
+        } catch (Exception e) {
+            // Log the exception for debugging
+            System.out.println("Exception occurred: " + e);
 
-
-            return new  ResponseEntity<String>("User registered successfully",HttpStatus.CREATED);
+            // Return 500 Internal Server Error for any unexpected server issues
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred during registration.");
         }
-        catch (Exception e){
-            return new ResponseEntity<>("Exception occured"+e,HttpStatus.BAD_REQUEST);
-        }
-
     }
+
 
 //    @PostMapping("/login")
 //    public ResponseEntity<String> user_login(@RequestBody UserLoginDto userLoginDto){
@@ -95,36 +121,75 @@ public class UserController {
 
     // endpoint for profile dashboard
     @GetMapping("/userinfo")
-    public ResponseEntity<UserInfoDto> user_info(@RequestHeader("Authorization") String token ) {
-        UserInfoDto userInfoDto = null;
+    public ResponseEntity<?> userInfo(@RequestHeader("Authorization") String token) {
         try {
+            // Check if token is present and valid
+            if (token == null || !token.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Authorization token is missing or invalid.");
+            }
+
             String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+            UserInfoDto userInfoDto = userService.get_user_info(username);
 
+            if (userInfoDto == null) {
+                // Return 404 if user information is not found
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User information not found.");
+            }
 
-            userInfoDto = userService.get_user_info(username);
+            // Return 200 OK with user information
+            return ResponseEntity.ok(userInfoDto);
 
-            return new ResponseEntity<>(userInfoDto, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            // Return 400 Bad Request for invalid data
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid request data.");
         } catch (Exception e) {
-            return new ResponseEntity<>(userInfoDto, HttpStatus.BAD_REQUEST);
+            // Log the exception for debugging
+            System.out.println("Exception occurred: " + e);
 
+            // Return 500 Internal Server Error for any other unexpected issues
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while retrieving user information.");
         }
     }
 
     @PutMapping("/update_user_info")
-    public ResponseEntity<UserInfoDto> update_info(@RequestHeader("Authorization") String token,@RequestBody UpdateUserInfoDto updateUserInfoDto){
-
-        String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
-        UserInfoDto userInfoDto = null;
+    public ResponseEntity<?> updateInfo(@RequestHeader("Authorization") String token, @RequestBody UpdateUserInfoDto updateUserInfoDto) {
         try {
-             userInfoDto = userService.update_user_info(username, updateUserInfoDto);
-        }
-        catch (Exception e){
-            System.out.println("Exception occured"+e);
-        }
+            // Check if token is present and valid
+            if (token == null || !token.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Authorization token is missing or invalid.");
+            }
 
-        return ResponseEntity.ok(userInfoDto);
+            String username = jwtUtils.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+            UserInfoDto userInfoDto = userService.update_user_info(username, updateUserInfoDto);
 
+            if (userInfoDto == null) {
+                // Return 404 if user information is not found or couldn't be updated
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User information not found or could not be updated.");
+            }
+
+            // Return 200 OK with the updated user information
+            return ResponseEntity.ok(userInfoDto);
+
+        } catch (IllegalArgumentException e) {
+            // Return 400 Bad Request for invalid input data
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid input data provided for updating user information.");
+        } catch (Exception e) {
+            // Log the exception for debugging
+            System.out.println("Exception occurred: " + e);
+
+            // Return 500 Internal Server Error for any unexpected issues
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while updating user information.");
+        }
     }
+
 
 
 
