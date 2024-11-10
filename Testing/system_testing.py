@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support.wait import WebDriverWait 
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import subprocess
@@ -28,16 +28,16 @@ driver = webdriver.Chrome()
 
 try:
     # Open the localhost URL
-    driver.get("http://localhost:3002")
+    driver.get("http://localhost:3000")
     driver.maximize_window()
     
 
     # Wait for an element on the page to load (to confirm successful navigation)
-    WebDriverWait(driver, 10).until(
+    WebDriverWait(driver, 5).until(
         EC.presence_of_element_located((By.TAG_NAME, "body"))
     )
     print("Page title:", driver.title)
-    time.sleep(20)
+    time.sleep(2)
     
 except Exception as e:
     print("An error occurred:", e)
@@ -49,10 +49,10 @@ signup_data = pd.read_csv(file_path)
 
 ##creating the new user
 
-sign_Up = driver.find_element(By.XPATH,"//a[text()='SignUp']" ) 
+sign_Up = driver.find_element(By.XPATH,"//a[text()='SignUp']" )
 sign_Up.click()
 
-for index, row in signup_data.iterrows():   
+for index, row in signup_data.iterrows():
     try:
         # Fill out the form fields
         time.sleep(2)
@@ -76,32 +76,31 @@ for index, row in signup_data.iterrows():
         time.sleep(1)
         driver.find_element(By.NAME, "goal").send_keys(row['goal'])
         time.sleep(1)
-       
         # Submit the form
-        submit_button = driver.find_element(By.XPATH, "//button[text()='SignUp']")
+        submit_button = driver.find_element(By.XPATH, "//button[text()='Sign Up']")
         submit_button.click()
-        time.sleep(5)
+        time.sleep(2)
 
-        WebDriverWait(driver, 10).until(EC.alert_is_present())
-        alert = Alert(driver)
-        print(alert.text)
-        print(alert.accept())
+        # WebDriverWait(driver, 20).until(EC.alert_is_present())
+        # alert = Alert(driver)
+        # print(alert.text)
+        # print(alert.accept())
 
     except(TimeoutError) :
         print("Logged In!")
-    time.sleep(5)
+    time.sleep(2)
     
     
-    time.sleep(3)
+    # time.sleep(3)
 
     driver.find_element(By.NAME, "username").send_keys(row['username'])
     time.sleep(1)
 
     driver.find_element(By.NAME, "password").send_keys(row['password'])
-    time.sleep(5)
+    time.sleep(2)
 
     ## check from here.. not getting clicked.
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Login']"))).click()
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Sign in']"))).click()
     #driver.find_element(By.XPATH, "//button[text()='Login']")
     time.sleep(2)
 
@@ -119,19 +118,19 @@ for index, row in signup_data.iterrows():
     add_Meal = driver.find_element(By.XPATH,"//textarea[@placeholder='ADD FOOD ITEM....']")
     time.sleep(3)
     add_Meal.click()
-    time.sleep(4)
+    time.sleep(2)
     add_Meal.send_keys("I had Pizza Today")
-    time.sleep(3)
+    time.sleep(2)
 
     ##Save the mean that is added
     driver.find_element(By.XPATH, "//button[text()= 'Save']").click()
     time.sleep(2)
 
-    WebDriverWait(driver, 10).until(EC.alert_is_present())
-    alert = Alert(driver)
-    print(alert.text)
-    print(alert.accept())
-    time.sleep(2)
+    # WebDriverWait(driver, 10).until(EC.alert_is_present())
+    # alert = Alert(driver)
+    # print(alert.text)
+    # print(alert.accept())
+    # time.sleep(2)
 
     element = driver.find_element(By.XPATH, "//h3[text()='Pizza']")
     #driver.execute_script("arguments[0].scrollIntoView();", element)

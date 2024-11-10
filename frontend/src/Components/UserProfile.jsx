@@ -9,7 +9,7 @@ const UserProfile = () => {
         weight: '',
         age: '',
         gender: '',
-        activityLevel: '',
+        activity_level: '',
         goal: '',
     });
 
@@ -66,7 +66,7 @@ const UserProfile = () => {
                     weight: profile.weight,
                     age: profile.age,
                     gender: profile.gender,
-                    activity_level: profile.activityLevel,
+                    activity_level: profile.activity_level,
                     goal: profile.goal,
                 }),
             });
@@ -164,7 +164,7 @@ const UserProfile = () => {
                         <label className="block text-gray-600 mb-1">Activity Level</label>
                         <select
                             name="activityLevel"
-                            value={profile.activityLevel}
+                            value={profile.activity_level}
                             onChange={handleChange}
                             disabled={!isEditing}
                             className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}

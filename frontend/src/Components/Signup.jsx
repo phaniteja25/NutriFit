@@ -45,19 +45,30 @@ const Signup = () => {
             newErrors.height = 'Height is required';
         } else if (!heightPattern.test(formData.height)) {
             newErrors.height = 'Height must be a positive number';
+        } else if (parseFloat(formData.height) > 250) {
+            newErrors.height = 'Height cannot exceed 250 cm';
+        }  else if (parseFloat(formData.height) < 60) {
+            newErrors.height = 'Height cannot be less than 60 cm';
         }
-
         const weightPattern = /^[0-9]+(\.[0-9]+)?$/;
         if (!formData.weight) {
             newErrors.weight = 'Weight is required';
         } else if (!weightPattern.test(formData.weight)) {
             newErrors.weight = 'Weight must be a positive number';
+        } else if (parseFloat(formData.weight) > 635) {
+            newErrors.weight = 'Weight cannot exceed 635 kgs';
+        } else if (parseFloat(formData.weight) < 3) {
+            newErrors.weight = 'Weight cannot be less than 3 kgs';
         }
 
         if (!formData.age) {
             newErrors.age = 'Age is required';
         } else if (isNaN(formData.age) || formData.age <= 0) {
             newErrors.age = 'Age must be a positive integer';
+        } else if (parseFloat(formData.age) >= 90) {
+            newErrors.age = 'Age cannot exceed 90 years';
+        } else if (parseFloat(formData.age) <= 12) {
+            newErrors.age = 'Age cannot be less than 12 years';
         }
 
         if (!formData.gender) {
