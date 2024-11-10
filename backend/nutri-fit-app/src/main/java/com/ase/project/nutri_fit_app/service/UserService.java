@@ -9,6 +9,7 @@ import com.ase.project.nutri_fit_app.util.NutritionalInfoCalcluator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -184,6 +185,21 @@ public class UserService {
         System.out.println(userInfoDto.toString());
 
         return userInfoDto;
+    }
+
+    @Transactional
+    public String updatePassword(String username, String newPassword) {
+        Users user = userRepo.findByUsername(username);
+
+        if (user == null) {
+            return "User not found";
+        }
+
+        // Encrypt the new password before saving it
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepo.save(user);
+
+        return "Password updated successfully";
     }
 
 }
