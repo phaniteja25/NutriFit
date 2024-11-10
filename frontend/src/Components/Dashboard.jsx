@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -33,11 +34,11 @@ const Dashboard = () => {
         totalProteins: 0
     });
     const [barData, setBarData] = useState({});
-    const [currentDayMeals, setCurrentDayMeals] = useState([]);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
     const authToken = localStorage.getItem("token");
+    const navigate = useNavigate();
 
     const fetchUserInfo = async () => {
         try {
@@ -112,38 +113,17 @@ const Dashboard = () => {
         }
     };
 
-    const fetchCurrentDayMeals = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/api/meals/get_current_day_meals', {
-                headers: {
-                    Authorization: `Bearer ${authToken}`
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch current day meals');
-            }
-
-            const data = await response.json();
-            setCurrentDayMeals(data);
-            console.log(data);
-        } catch (error) {
-            setError(error.message);
-        }
-    };
-
     useEffect(() => {
         const fetchData = async () => {
             await fetchUserInfo();
             await fetchCurrentDaySummary();
             await fetchMeals();
-            await fetchCurrentDayMeals();
         };
         fetchData();
     }, []);
 
-    const renderCircularProgress = (value, goal, label) => (
-        <div style={{ width: "80px", margin: "10px" }}>
+    const renderCircularProgress = (value, goal, label, actual, required) => (
+        <div style={{ width: "100px", margin: "10px", textAlign: "center" }}>
             <CircularProgressbar
                 value={value}
                 maxValue={goal}
@@ -155,7 +135,11 @@ const Dashboard = () => {
                     trailColor: "#e88207",
                 })}
             />
-            <p style={{ textAlign: "center" }}>{label}</p>
+            <p style={{ fontWeight: 'bold', marginTop: '5px' }}>{label}</p>
+            <p style={{ fontSize: '12px', color: '#666' }}>
+                {`Today: ${actual !== null ? Math.round(actual) : 'N/A'}`}<br />
+                { `Goal: ${required !== null ? Math.round(required) : 'N/A'}`}
+            </p>
         </div>
     );
 
@@ -177,72 +161,93 @@ const Dashboard = () => {
     return (
         <>
             <Navbar />
-            <div>
-                {error && <p style={{ color: "red" }}>{error}</p>}
-                <div style={{ display: "flex", justifyContent: "space-around", margin: "20px 0" }}>
-                    {renderCircularProgress(isLoading ? 0 : circularData.totalCalories, userInfo.total_cal_intake, "Calories")}
-                    {renderCircularProgress(isLoading ? 0 : circularData.totalCarbs, userInfo.reqd_carbs, "Carbs")}
-                    {renderCircularProgress(isLoading ? 0 : circularData.totalFats, userInfo.reqd_fat, "Fats")}
-                    {renderCircularProgress(isLoading ? 0 : circularData.totalProteins, userInfo.reqd_protein, "Proteins")}
+            <div style={{ width: '100vw', height: '100vh', backgroundColor: '#f5f5f5', padding: '24px', boxSizing: 'border-box' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                    <div style={{ marginRight: '20px', textAlign: 'left' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+                            <span style={{ width: '16px', height: '16px', backgroundColor: '#e88207', borderRadius: '50%', display: 'inline-block', marginRight: '8px' }}></span>
+                            <span style={{ color: '#333' }}>Required Macro</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ width: '16px', height: '16px', backgroundColor: '#3e98c7', borderRadius: '50%', display: 'inline-block', marginRight: '8px' }}></span>
+                            <span style={{ color: '#333' }}>Today’s Macro</span>
+                        </div>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                        <h3 style={{
+                            textAlign: 'center',
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            color: '#333',
+                            marginBottom: '20px',
+                            textTransform: 'uppercase',
+                            letterSpacing: '1px'
+                        }}>
+                            Daily Nutritional Goals Progress
+                        </h3>
+    
+                        {error && <p style={{ color: "red" }}>{error}</p>}
+                        <div style={{ display: "flex", justifyContent: "space-around", margin: "40px 0" }}>
+                            {renderCircularProgress(isLoading ? 0 : circularData.totalCalories, userInfo.total_cal_intake, "Calories", circularData.totalCalories, userInfo.total_cal_intake)}
+                            {renderCircularProgress(isLoading ? 0 : circularData.totalCarbs, userInfo.reqd_carbs, "Carbs", circularData.totalCarbs, userInfo.reqd_carbs)}
+                            {renderCircularProgress(isLoading ? 0 : circularData.totalFats, userInfo.reqd_fat, "Fats", circularData.totalFats, userInfo.reqd_fat)}
+                            {renderCircularProgress(isLoading ? 0 : circularData.totalProteins, userInfo.reqd_protein, "Proteins", circularData.totalProteins, userInfo.reqd_protein)}
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around", margin: "20px 0" }}>
-                <div style={{ width: "20%", marginBottom: "20px" }}>
-                    <h3>Calories</h3>
-                    <Bar data={createChartData("calories")} options={{ responsive: true }} />
+                <div>
+                    <h3 style={{
+                        textAlign: 'center',
+                        fontSize: '24px',
+                        fontWeight: 'bold',
+                        color: '#333',
+                        marginBottom: '20px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px'
+                    }}>
+                        Weekly Nutrient Intake Overview
+                    </h3>
+                    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around", margin: "20px 0" }}>
+                        <div style={{ width: "20%", marginBottom: "20px" }}>
+                            <h3>Calories</h3>
+                            <Bar data={createChartData("calories")} options={{ responsive: true }} />
+                        </div>
+                        <div style={{ width: "20%", marginBottom: "20px" }}>
+                            <h3>Carbs</h3>
+                            <Bar data={createChartData("carbs")} options={{ responsive: true }} />
+                        </div>
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around", margin: "20px 0" }}>
+                        <div style={{ width: "20%", marginBottom: "20px" }}>
+                            <h3>Fats</h3>
+                            <Bar data={createChartData("fats")} options={{ responsive: true }} />
+                        </div>
+                        <div style={{ width: "20%", marginBottom: "20px" }}>
+                            <h3>Proteins</h3>
+                            <Bar data={createChartData("proteins")} options={{ responsive: true }} />
+                        </div>
+                    </div>
                 </div>
-                <div style={{ width: "20%", marginBottom: "20px" }}>
-                    <h3>Carbs</h3>
-                    <Bar data={createChartData("carbs")} options={{ responsive: true }} />
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    <button 
+                        onClick={() => navigate("/history")}
+                        style={{
+                            padding: '10px 20px',
+                            backgroundColor: '#3e98c7',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '16px',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        View History
+                    </button>
                 </div>
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around", margin: "20px 0" }}>
-                <div style={{ width: "20%", marginBottom: "20px" }}>
-                    <h3>Fats</h3>
-                    <Bar data={createChartData("fats")} options={{ responsive: true }} />
-                </div>
-                <div style={{ width: "20%", marginBottom: "20px" }}>
-                    <h3>Proteins</h3>
-                    <Bar data={createChartData("proteins")} options={{ responsive: true }} />
-                </div>
-            </div>
-            <div>
-                <h2>Current Day Meal Details</h2>
-                {currentDayMeals.length > 0 ? (
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Meal Name</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Calories</th>
-                                <th>Proteins</th>
-                                <th>Carbs</th>
-                                <th>Fats</th>
-                                <th>Fibre</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentDayMeals.map((meal) => (
-                                <tr key={meal.mealID}>
-                                    <td>{meal.mealName}</td>
-                                    <td>{meal.log_date}</td>
-                                    <td>{new Date(meal.log_time).toLocaleTimeString()}</td>
-                                    <td>{meal.calories}</td>
-                                    <td>{meal.proteins}</td>
-                                    <td>{meal.carbs}</td>
-                                    <td>{meal.fats}</td>
-                                    <td>{meal.fibre}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                ) : (
-                    <p>Loading current day meals...</p>
-                )}
             </div>
         </>
     );
-};
+}
 
 export default Dashboard;

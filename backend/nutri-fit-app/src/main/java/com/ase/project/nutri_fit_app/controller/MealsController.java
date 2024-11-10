@@ -194,7 +194,7 @@ public class MealsController {
                     .body("An error occurred while retrieving the nutritional summary.");
         }
     }
-
+ 
 
 
     @GetMapping("/get_all_meals")

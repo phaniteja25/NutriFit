@@ -66,6 +66,8 @@ public class NutritionalInfoCalcluator {
                 return 0.80;
             case "Reduce Fat by 10%":
                 return 0.90;
+            case "Gain Muscle":
+                return 1.30;
             default:  // Default to maintenance or a slight surplus
                 return 1.00;
         }

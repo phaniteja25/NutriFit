@@ -171,7 +171,7 @@ input{
 
 /* CSS For Loginpage */
 
-.lg-container {
+/* .lg-container {
   font-family: Arial, sans-serif;
   background-color: #e0e0e0;
   height: 100vh;
@@ -251,6 +251,8 @@ a:hover {
 .lg-btn:hover {
   background-color: #0056b3;
 }
+  */
+
 
 /* CSS for MealGenerator page */
 body {
@@ -371,4 +373,181 @@ textarea {
 
 .save-btn:hover {
   background-color: #ccc;
+}
+
+.loading-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.generated-meal-plan {
+  width: 100%;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.meal-plan-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.meal-plan-header h3 {
+  font-size: 1.8em;
+  color: #333;
+}
+
+.meal-plan-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.meal-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  width: 250px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.meal-card h4 {
+  color: #007bff;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.meal-info p {
+  margin: 5px 0;
+}
+
+
+
+
+/* Container for the meal plan generator */
+.meal-plan-container {
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.meal-plan-container h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.meal-plan-container label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.meal-plan-container input[type="number"],
+.meal-plan-container input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  transition: border-color 0.3s;
+}
+
+.meal-plan-container input[type="number"]:focus,
+.meal-plan-container input[type="text"]:focus {
+  border-color: #3e98c7;
+  outline: none;
+}
+
+.meal-plan-container button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #3e98c7;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.meal-plan-container button:hover {
+  background-color: #357ca5;
+}
+
+.meal-plan-container p {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Generated Meal Plan styling */
+.generated-meal-plan {
+  margin-top: 20px;
+}
+
+.generated-meal-plan h3 {
+  text-align: center;
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.meal-card {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.meal-card h4 {
+  font-size: 18px;
+  color: #3e98c7;
+  margin-bottom: 10px;
+}
+
+.meal-info {
+  padding-left: 10px;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.meal-info p {
+  margin: 4px 0;
 }
