@@ -43,6 +43,17 @@ const UserProfile = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        // Only allow numbers and a single decimal point for height and weight fields
+        if ((name === 'height' || name === 'weight') && !/^\d*\.?\d*$/.test(value)) {
+            return; // Prevents updating the state if the input is invalid
+        }
+
+        // Only allow whole numbers for the age field
+        if (name === 'age' && !/^\d*$/.test(value)) {
+            return; // Prevents updating the state if the input is invalid
+        }
+
         setProfile((prevState) => ({
             ...prevState,
             [name]: value,

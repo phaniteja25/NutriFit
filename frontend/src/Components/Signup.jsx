@@ -89,6 +89,16 @@ const Signup = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        if ((name === 'height' || name === 'weight') && !/^\d*\.?\d*$/.test(value)) {
+                return; // Prevents updating the state if the input is invalid
+        }
+
+        // Only allow whole numbers for the age field
+        if (name === 'age' && !/^\d*$/.test(value)) {
+                return; // Prevents updating the state if the input is invalid
+        }
+
         setFormData((prevData) => ({
             ...prevData,
             [name]: value
@@ -149,9 +159,45 @@ const Signup = () => {
                             { label: 'Username', name: 'username', type: 'text', placeholder:"Username should be atleast 3 characters"},
                             { label: 'Email', name: 'email', type: 'email',placeholder:"Please enter valid email" },
                             { label: 'Password', name: 'password', type: 'password',placeholder:"Password should be minimum of 8 characters long" },
-                            { label: 'Height', name: 'height', type: 'text',placeholder:"Please enter your height in cm" },
-                            { label: 'Weight', name: 'weight', type: 'text',placeholder:"Enter your weight in kg" },
-                            { label: 'Age', name: 'age', type: 'text',placeholder:"Please enter your age" }
+                            {
+                                    label: 'Height',
+                                    name: 'height',
+                                    type: 'text',
+                                    placeholder: "Please enter your height in cm",
+                                    pattern: "^[0-9]*\\.?[0-9]*$",  // restricts to numbers and decimal point
+                                    onKeyDown: (e) => {
+                                        // prevent alphabetic and symbol input
+                                        if (e.key.match(/[^0-9.]/) && !['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                                            e.preventDefault();
+                                        }
+                                    }
+                                },
+                                {
+                                    label: 'Weight',
+                                    name: 'weight',
+                                    type: 'text',
+                                    placeholder: "Enter your weight in kg",
+                                    pattern: "^[0-9]*\\.?[0-9]*$",  // restricts to numbers and decimal point
+                                    onKeyDown: (e) => {
+                                        // prevent alphabetic and symbol input
+                                        if (e.key.match(/[^0-9.]/) && !['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                                            e.preventDefault();
+                                        }
+                                    }
+                                },
+                                {
+                                    label: 'Age',
+                                    name: 'age',
+                                    type: 'text',
+                                    placeholder: "Please enter your age",
+                                    pattern: "^[0-9]*$",  // restricts to only numbers
+                                    onKeyDown: (e) => {
+                                        // prevent alphabetic and symbol input
+                                        if (e.key.match(/[^0-9]/) && !['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                                            e.preventDefault();
+                                        }
+                                    }
+                                }
                         ].map((field) => (
                             <div className="mb-4" key={field.name}>
                                 <label className="block text-gray-600 mb-1">{field.label}</label>
