@@ -49,7 +49,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/user/signup", "/user/generate-token").permitAll()
+                        .requestMatchers("/user/signup", "/user/generate-token","/user/update-password").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated()
 

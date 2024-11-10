@@ -3,7 +3,7 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import './App.css';
 import AboutUs from './Components/AboutUs';
 import Dashboard from './Components/Dashboard';
-// import Dashboard1 from './Components/Dashboard1';
+import History from './Components/History';
 import Login from './Components/Login';
 import MealGenerator from './Components/MealGenerator';
 import MealLoging from './Components/MealLoging';
@@ -11,7 +11,7 @@ import Signup from './Components/Signup';
 import UserProfile from './Components/UserProfile';
 
 function ProtectedRoute({ children }) {
-  const isAuthenticated = !!localStorage.getItem('token'); // Check if user is logged in
+  const isAuthenticated = !!localStorage.getItem('token');
   return isAuthenticated ? children : <Navigate to="/" />;
 }
 
@@ -27,7 +27,6 @@ const App = () => {
           element={
             <ProtectedRoute>
               <Dashboard />
-              {/* <Dashboard1 /> */}
             </ProtectedRoute>
           }
         />
@@ -35,6 +34,7 @@ const App = () => {
         <Route path="/mealloging" element={<MealLoging />}/>
         <Route path="/aboutus" element={<AboutUs />}/>
         <Route path="/userprofile" element={<UserProfile />}/>
+        <Route path="/history" element={<History />}/>
       </Routes>
     </Router>
     </>

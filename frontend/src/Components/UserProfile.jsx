@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 
@@ -10,7 +9,7 @@ const UserProfile = () => {
         weight: '',
         age: '',
         gender: '',
-        activityLevel: '',
+        activity_level: '',
         goal: '',
     });
 
@@ -27,48 +26,66 @@ const UserProfile = () => {
 
     const fetchUserInfo = async (authToken) => {
         try {
-            const response = await axios.get('http://localhost:8080/user/userinfo', {
+            const response = await fetch('http://localhost:8080/user/userinfo', {
                 headers: {
                     Authorization: `Bearer ${authToken}`,
                 },
             });
-            setProfile(response.data);
+            if (!response.ok) throw new Error('Failed to fetch user info');
+            
+            const data = await response.json();
+            setProfile(data);
+            console.log(data);
         } catch (error) {
             console.error('Error fetching user info:', error);
         }
     };
 
-    // Handle form input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        // Only allow numbers and a single decimal point for height and weight fields
+        if ((name === 'height' || name === 'weight') && !/^\d*\.?\d*$/.test(value)) {
+            return; // Prevents updating the state if the input is invalid
+        }
+
+        // Only allow whole numbers for the age field
+        if (name === 'age' && !/^\d*$/.test(value)) {
+            return; // Prevents updating the state if the input is invalid
+        }
+
         setProfile((prevState) => ({
             ...prevState,
             [name]: value,
         }));
     };
+
     const handleEditClick = () => {
         setIsEditing(true);
     };
+
     const handleSaveClick = async () => {
         try {
-            const response = await axios.put(
-                'http://localhost:8080/user/update_user_info',
-                {
+            const response = await fetch('http://localhost:8080/user/update_user_info', {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                     height: profile.height,
                     weight: profile.weight,
                     age: profile.age,
                     gender: profile.gender,
-                    activity_level: profile.activityLevel,
+                    activity_level: profile.activity_level,
                     goal: profile.goal,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            setProfile(response.data);
+                }),
+            });
+
+            if (!response.ok) throw new Error('Failed to update user info');
+
+            const updatedData = await response.json();
+            setProfile(updatedData);
             setIsEditing(false);
         } catch (error) {
             console.error('Error updating user info:', error);
@@ -78,85 +95,90 @@ const UserProfile = () => {
     return (
         <>
             <Navbar />
-            <div className='container'>
-                <div className="profile-container">
-                    <h2>User Profile</h2>
+            <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+                <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">User Profile</h2>
 
-                    <div className="form-group">
-                        <label>Username</label>
+                    <div className="mb-4">
+                        <label className="block text-gray-600 mb-1">Username</label>
                         <input
                             type="text"
                             name="username"
                             value={profile.username}
                             readOnly
+                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 bg-gray-100"
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label>Email</label>
+                    <div className="mb-4">
+                        <label className="block text-gray-600 mb-1">Email</label>
                         <input
                             type="email"
                             name="email"
                             value={profile.email}
                             readOnly
+                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 bg-gray-100"
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label>Height</label>
+                    <div className="mb-4">
+                        <label className="block text-gray-600 mb-1">Height</label>
                         <input
                             type="text"
                             name="height"
                             value={profile.height}
                             onChange={handleChange}
                             disabled={!isEditing}
+                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label>Weight</label>
+                    <div className="mb-4">
+                        <label className="block text-gray-600 mb-1">Weight</label>
                         <input
                             type="text"
                             name="weight"
                             value={profile.weight}
                             onChange={handleChange}
                             disabled={!isEditing}
+                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label>Age</label>
+                    <div className="mb-4">
+                        <label className="block text-gray-600 mb-1">Age</label>
                         <input
                             type="number"
                             name="age"
                             value={profile.age}
                             onChange={handleChange}
                             disabled={!isEditing}
+                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label>Gender</label>
+                    <div className="mb-4">
+                        <label className="block text-gray-600 mb-1">Gender</label>
                         <select
-                            className='up-select'
                             name="gender"
                             value={profile.gender}
                             onChange={handleChange}
                             disabled={!isEditing}
+                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
                         >
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                         </select>
                     </div>
 
-                    <div className="form-group">
-                        <label>Activity Level</label>
+                    <div className="mb-4">
+                        <label className="block text-gray-600 mb-1">Activity Level</label>
                         <select
-                            className='up-select'
                             name="activityLevel"
-                            value={profile.activityLevel}
+                            value={profile.activity_level}
                             onChange={handleChange}
                             disabled={!isEditing}
+                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
                         >
                             <option value="">Select Activity Level</option>
                             <option value="Sedentary (little or no exercise)">Sedentary (little or no exercise)</option>
@@ -168,14 +190,14 @@ const UserProfile = () => {
                         </select>
                     </div>
 
-                    <div className="form-group">
-                        <label>Goal</label>
+                    <div className="mb-4">
+                        <label className="block text-gray-600 mb-1">Goal</label>
                         <select
-                            className='up-select'
                             name="goal"
                             value={profile.goal}
                             onChange={handleChange}
                             disabled={!isEditing}
+                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
                         >
                             <option value="">Select Goal</option>
                             <option value="Reduce Fat by 30%">Reduce Fat by 30%</option>
@@ -186,8 +208,8 @@ const UserProfile = () => {
                     </div>
 
                     <button
-                        className='up-btn'
                         onClick={isEditing ? handleSaveClick : handleEditClick}
+                        className="w-full py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700 transition duration-200 focus:outline-none focus:ring focus:ring-blue-300"
                     >
                         {isEditing ? 'Save' : 'Edit'}
                     </button>

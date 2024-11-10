@@ -2,10 +2,7 @@ package com.ase.project.nutri_fit_app.controller;
 
 
 import com.ase.project.nutri_fit_app.config.JwtUtils;
-import com.ase.project.nutri_fit_app.dto.UpdateUserInfoDto;
-import com.ase.project.nutri_fit_app.dto.UserInfoDto;
-import com.ase.project.nutri_fit_app.dto.UserLoginDto;
-import com.ase.project.nutri_fit_app.dto.UserSignUpDto;
+import com.ase.project.nutri_fit_app.dto.*;
 import com.ase.project.nutri_fit_app.model.UserInfo;
 import com.ase.project.nutri_fit_app.model.Users;
 import com.ase.project.nutri_fit_app.model.Users;
@@ -190,6 +187,18 @@ public class UserController {
         }
     }
 
+
+
+
+    @PutMapping("/update-password")
+    public ResponseEntity<String> updatePassword(@RequestBody PasswordUpdateDto request) {
+
+        String result = userService.updatePassword(request.getUsername(), request.getNewPassword());
+        if ("User not found".equals(result)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
+    }
 
 
 

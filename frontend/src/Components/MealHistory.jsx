@@ -1,13 +1,15 @@
 import React from 'react';
 import { FaTrash } from 'react-icons/fa';
 
-const MealItem = ({ meal, onDelete }) => {
-  const formatMealName = (name) => {
-    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+const MealHistory = ({ meal = {}, onDelete }) => {
+  const formatMealName = (name = '') => {
+    return name ? name.charAt(0).toUpperCase() + name.slice(1).toLowerCase() : 'Unnamed Meal';
   };
 
   const handleDelete = () => {
-    onDelete(meal.mealID);
+    if (onDelete && meal.mealID) {
+      onDelete(meal.mealID);
+    }
   };
 
   return (
@@ -29,36 +31,36 @@ const MealItem = ({ meal, onDelete }) => {
           <tbody className="divide-y divide-gray-100">
             <tr>
               <td className="py-3 pr-8 font-medium text-gray-600">Calories</td>
-              <td className="py-3 text-gray-800">{meal.calories} kcal</td>
+              <td className="py-3 text-gray-800">{meal.calories || 0} kcal</td>
             </tr>
             <tr>
               <td className="py-3 pr-8 font-medium text-gray-600">Proteins</td>
-              <td className="py-3 text-gray-800">{meal.proteins} g</td>
+              <td className="py-3 text-gray-800">{meal.proteins || 0} g</td>
             </tr>
             <tr>
               <td className="py-3 pr-8 font-medium text-gray-600">Fats</td>
-              <td className="py-3 text-gray-800">{meal.fats} g</td>
+              <td className="py-3 text-gray-800">{meal.fats || 0} g</td>
             </tr>
             <tr>
               <td className="py-3 pr-8 font-medium text-gray-600">Carbohydrates</td>
-              <td className="py-3 text-gray-800">{meal.carbs} g</td>
+              <td className="py-3 text-gray-800">{meal.carbs || 0} g</td>
             </tr>
             <tr>
               <td className="py-3 pr-8 font-medium text-gray-600">Fibre</td>
-              <td className="py-3 text-gray-800">{meal.fibre} g</td>
+              <td className="py-3 text-gray-800">{meal.fibre || 0} g</td>
             </tr>
             <tr>
               <td className="py-3 pr-8 font-medium text-gray-600">Serving Size</td>
-              <td className="py-3 text-gray-800">{meal.serving_size} g</td>
+              <td className="py-3 text-gray-800">{meal.serving_size || 0} g</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div className="absolute bottom-4 right-4 text-gray-300 text-sm italic mt-2">
-        logged at {new Date(meal.log_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+        logged at {meal.log_time ? new Date(meal.log_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'N/A'}
       </div>
     </div>
   );
 };
 
-export default MealItem;
+export default MealHistory;
