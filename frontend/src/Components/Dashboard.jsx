@@ -161,7 +161,7 @@ const Dashboard = () => {
     return (
         <>
             <Navbar />
-            <div style={{ width: '100vw', height: '100vh', backgroundColor: '#f5f5f5', padding: '24px', boxSizing: 'border-box' }}>
+            <div style={{ width: '100vw', minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '24px', boxSizing: 'border-box',overflow: 'hidden' }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                     <div style={{ marginRight: '20px', textAlign: 'left' }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
@@ -178,10 +178,16 @@ const Dashboard = () => {
                             textAlign: 'center',
                             fontSize: '24px',
                             fontWeight: 'bold',
+                            margin:'0px',
+                            paddingBottom:'10px',
+                            paddingRight:'140px',
+                            // display:'flex',
+                            alignItems:'flex-end',
                             color: '#333',
                             marginBottom: '20px',
                             textTransform: 'uppercase',
-                            letterSpacing: '1px'
+                            letterSpacing: '1px',
+                            // marginRight: '10px'
                         }}>
                             Daily Nutritional Goals Progress
                         </h3>

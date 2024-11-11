@@ -159,6 +159,7 @@ const MealLoging = () => {
         <div className="max-w-5xl mx-auto px-6 md:px-8">
           <div className="bg-white rounded-xl shadow-xl p-8 mb-8 border border-gray-100">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Meal</h2>
+            <p>Please add your meals in grams(g),kilograms(kg), pounds(lb), ounce(oz)</p>
             <div className="mb-4">
               <textarea
                 value={mealInput}

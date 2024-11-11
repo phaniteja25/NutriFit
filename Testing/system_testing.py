@@ -12,13 +12,13 @@ from selenium.webdriver.common.alert import Alert
 
 
 # Start the server
-server_process = subprocess.Popen(["npm", "start"])
+server_process = subprocess.Popen([r"C:\\Program Files\\nodejs\\npm.cmd", "start"])
 
 # Wait a few seconds to ensure the server is fully started
 time.sleep(5)  # Adjust as needed based on your server’s startup time
 
 # Start the server process
-server_process = subprocess.Popen(["npm", "start"])
+# server_process = subprocess.Popen(["npm", "start"])
 
 # Wait for the server to start
 time.sleep(5)  # Adjust this based on the server's startup time

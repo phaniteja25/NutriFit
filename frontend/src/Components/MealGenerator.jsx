@@ -84,7 +84,7 @@ const MealPlanGenerator = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Cuisine:</label>
+                    <label>Cuisine: Ex: Indian, Chinese, Mexican </label>
                     <input
                         type="text"
                         value={cuisineType}
@@ -92,7 +92,7 @@ const MealPlanGenerator = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Food Preference:</label>
+                    <label>Food Preference: Ex: Veg, NonVeg </label>
                     <input
                         type="text"
                         value={foodPref}
@@ -100,7 +100,7 @@ const MealPlanGenerator = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Allergies (comma separated):</label>
+                    <label>Allergies (comma separated) Ex: Egg,Tofu Soy:</label>
                     <input
                         type="text"
                         value={allergies.join(', ')}
