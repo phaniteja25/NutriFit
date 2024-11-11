@@ -43,17 +43,6 @@ const UserProfile = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
-        // Only allow numbers and a single decimal point for height and weight fields
-        if ((name === 'height' || name === 'weight') && !/^\d*\.?\d*$/.test(value)) {
-            return; // Prevents updating the state if the input is invalid
-        }
-
-        // Only allow whole numbers for the age field
-        if (name === 'age' && !/^\d*$/.test(value)) {
-            return; // Prevents updating the state if the input is invalid
-        }
-
         setProfile((prevState) => ({
             ...prevState,
             [name]: value,
@@ -174,8 +163,8 @@ const UserProfile = () => {
                     <div className="mb-4">
                         <label className="block text-gray-600 mb-1">Activity Level</label>
                         <select
-                            name="activityLevel"
-                            value={profile.activity_level}
+                            name="activity_level"
+                            value={profile.activity_level || ""}
                             onChange={handleChange}
                             disabled={!isEditing}
                             className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}

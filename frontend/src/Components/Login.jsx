@@ -181,7 +181,8 @@ const Login = () => {
                             <li><strong>Track Meals:</strong> Log every meal and keep a record of your daily food intake.</li>
                             <li><strong>Calorie Goals:</strong> Set daily calorie goals and monitor your progress with visual feedback.</li>
                             <li><strong>Macronutrient Insights:</strong> Get a breakdown of proteins, fats, and carbs for a balanced diet.</li>
-                            <li><strong>Stay Motivated:</strong> View your progress over time and stay motivated to reach your goals.</li>
+                            <li><strong>AI Meal Plan Generator</strong>Utilize AI Tool to generate Meal Plan for the week</li>
+                            <li><strong>Stay Motivated: </strong> View your progress over time and stay motivated to reach your goals.</li>
                         </ul>
                         <p className="text-gray-700 text-lg">
                             Join us today to take control of your nutrition and make healthier choices every day!

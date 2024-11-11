@@ -69,6 +69,32 @@ const MealLoging = () => {
     }
   };
 
+  // const handleSaveMeal = async () => {
+  //   if (!mealInput.trim()) {
+  //     alert('Please enter a meal item.');
+  //     return;
+  //   }
+  //   const token = localStorage.getItem('token');
+  //   if (!token) {
+  //     console.error('No token found');
+  //     return;
+  //   }
+  //   try {
+  //     const response = await fetch(`http://localhost:8080/api/meals/log?prompt=${encodeURIComponent(mealInput)}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+  //     if (!response.ok) throw new Error('Failed to save meal');
+  //     fetchMeals();
+  //   } catch (error) {
+  //     console.error('Error saving meal:', error);
+  //   }
+  // };
+
+
   const handleSaveMeal = async () => {
     if (!mealInput.trim()) {
       alert('Please enter a meal item.');
@@ -88,11 +114,17 @@ const MealLoging = () => {
         },
       });
       if (!response.ok) throw new Error('Failed to save meal');
-      fetchMeals();
+
+      const data = await response.json();
+      if (Array.isArray(data) && data.length === 0) {
+        alert("Sorry, we couldn't identify your food item. Please try manual logging.");
+      } else {
+        fetchMeals();
+      }
     } catch (error) {
       console.error('Error saving meal:', error);
-    }
-  };
+    }
+  };
 
   const handleManualLogging = () => {
     setManualLogVisible(true);
