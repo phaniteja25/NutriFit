@@ -1,3 +1,4 @@
+/* Importing the libraries for the dashboard functions*/
 import {
     BarElement,
     CategoryScale,
@@ -16,6 +17,7 @@ import Navbar from "./Navbar";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
+/*The below function is used to generate today date and day for graph*/
 const formatDate = (dateString) => {
     const [year, month, day] = dateString.split("-");
     const monthNames = [
@@ -26,6 +28,7 @@ const formatDate = (dateString) => {
 };
 
 const Dashboard = () => {
+    /* initalising the constants for storing the data */
     const [userInfo, setUserInfo] = useState({});
     const [circularData, setCircularData] = useState({
         totalCalories: 0,
@@ -37,9 +40,10 @@ const Dashboard = () => {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
-    const authToken = localStorage.getItem("token");
-    const navigate = useNavigate();
+    const authToken = localStorage.getItem("token"); //storing the user token foe authentication
+    const navigate = useNavigate();//using navigate function to navigate between the pages
 
+    /* using userinfo function to retrive the user info data from the databse*/
     const fetchUserInfo = async () => {
         try {
             const response = await fetch("http://localhost:8080/user/userinfo", {
@@ -57,13 +61,13 @@ const Dashboard = () => {
             console.error("Error fetching user info:", error);
         }
     };
-
+    /* using the currentdaysummary function the current day macros are retrived from the database for generating the progress ring*/
     const fetchCurrentDaySummary = async () => {
         try {
             const response = await fetch("http://localhost:8080/api/meals/current_day_summary", {
                 method: "GET",
                 headers: {
-                    Authorization: `Bearer ${authToken}`
+                    Authorization: `Bearer ${authToken}`//verfying the user token
                 }
             });
             if (!response.ok) throw new Error("Failed to fetch current day nutritional summary");
@@ -76,7 +80,7 @@ const Dashboard = () => {
             console.error("Error fetching summary:", error);
         }
     };
-
+    /* the fetch meals function is used for getting all the meals from the database for representing the data in the bargraph*/
     const fetchMeals = async () => {
         try {
             const response = await fetch("http://localhost:8080/api/meals/get_all_meals", {
@@ -112,7 +116,7 @@ const Dashboard = () => {
             console.error("Error fetching meals:", error);
         }
     };
-
+    /* useeffect function is used to apply the functions in the frontend*/
     useEffect(() => {
         const fetchData = async () => {
             await fetchUserInfo();
@@ -121,7 +125,7 @@ const Dashboard = () => {
         };
         fetchData();
     }, []);
-
+    /* the rendercircularprogress function is used to generate the progress ring bar using the required macro data and the macros from the meals*/
     const renderCircularProgress = (value, goal, label, actual, required) => (
         <div style={{ width: "100px", margin: "10px", textAlign: "center" }}>
             <CircularProgressbar
