@@ -7,6 +7,7 @@ const MealLoging = () => {
   const [mealsByDate, setMealsByDate] = useState({});
   const [mealInput, setMealInput] = useState('');
   const [manualLogVisible, setManualLogVisible] = useState(false);
+  const [editingMeal, setEditingMeal] = useState(null);
   const [manualMeal, setManualMeal] = useState({
     meal_name: '',
     proteins: '',
@@ -69,75 +70,6 @@ const MealLoging = () => {
     }
   };
 
-  // const handleSaveMeal = async () => {
-  //   if (!mealInput.trim()) {
-  //     alert('Please enter a meal item.');
-  //     return;
-  //   }
-  //   const token = localStorage.getItem('token');
-  //   if (!token) {
-  //     console.error('No token found');
-  //     return;
-  //   }
-  //   try {
-  //     const response = await fetch(`http://localhost:8080/api/meals/log?prompt=${encodeURIComponent(mealInput)}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-  //     if (!response.ok) throw new Error('Failed to save meal');
-  //     fetchMeals();
-  //   } catch (error) {
-  //     console.error('Error saving meal:', error);
-  //   }
-  // };
-
-
-  const handleSaveMeal = async () => {
-    if (!mealInput.trim()) {
-      alert('Please enter a meal item.');
-      return;
-    }
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
-    try {
-      const response = await fetch(`http://localhost:8080/api/meals/log?prompt=${encodeURIComponent(mealInput)}`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) throw new Error('Failed to save meal');
-
-      const data = await response.json();
-      if (Array.isArray(data) && data.length === 0) {
-        alert("Sorry, we couldn't identify your food item. Please try manual logging.");
-      } else {
-        fetchMeals();
-      }
-    } catch (error) {
-      console.error('Error saving meal:', error);
-    }
-  };
-
-  const handleManualLogging = () => {
-    setManualLogVisible(true);
-  };
-
-  const handleManualInputChange = (e) => {
-    const { name, value } = e.target;
-    setManualMeal((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
   const handleSaveManualMeal = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -171,8 +103,73 @@ const MealLoging = () => {
     }
   };
 
+  const handleEditMeal = (meal) => {
+    setEditingMeal(meal);
+    setManualMeal({
+      meal_name: meal.mealName, // Note: adjusted to match your backend field name
+      proteins: meal.proteins,
+      carbs: meal.carbs,
+      fats: meal.fats,
+      calories: meal.calories,
+      fibre: meal.fibre,
+      serving_size: meal.serving_size
+    });
+    setManualLogVisible(true);
+  };
+
+  const handleUpdateMeal = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/meals/update_meal/${editingMeal.mealID}`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(manualMeal),
+      });
+
+      if (!response.ok) throw new Error('Failed to update meal');
+      
+      alert('Meal updated successfully');
+      setManualLogVisible(false);
+      setEditingMeal(null);
+      setManualMeal({
+        meal_name: '',
+        proteins: '',
+        carbs: '',
+        fats: '',
+        calories: '',
+        fibre: '',
+        serving_size: ''
+      });
+      fetchMeals();
+    } catch (error) {
+      console.error('Error updating meal:', error);
+      alert('Failed to update meal');
+    }
+  };
+
+  const handleManualLogging = () => {
+    setManualLogVisible(true);
+  };
+
+  const handleManualInputChange = (e) => {
+    const { name, value } = e.target;
+    setManualMeal((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   const handleCancelManualMeal = () => {
     setManualLogVisible(false);
+    setEditingMeal(null);
     setManualMeal({
       meal_name: '',
       proteins: '',
@@ -184,6 +181,37 @@ const MealLoging = () => {
     });
   };
 
+  const handleSaveMeal = async () => {
+    if (!mealInput.trim()) {
+      alert('Please enter a meal item.');
+      return;
+    }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found');
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:8080/api/meals/log?prompt=${encodeURIComponent(mealInput)}`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) throw new Error('Failed to save meal');
+
+      const data = await response.json();
+      if (Array.isArray(data) && data.length === 0) {
+        alert("Sorry, we couldn't identify your food item. Please try manual logging.");
+      } else {
+        fetchMeals();
+      }
+    } catch (error) {
+      console.error('Error saving meal:', error);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -191,7 +219,7 @@ const MealLoging = () => {
         <div className="max-w-5xl mx-auto px-6 md:px-8">
           <div className="bg-white rounded-xl shadow-xl p-8 mb-8 border border-gray-100">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Meal</h2>
-            <p>Please add your meals in grams(g),kilograms(kg), pounds(lb), ounce(oz)</p>
+            <p>Please add your meals in grams(g), kilograms(kg), pounds(lb), ounce(oz)</p>
             <div className="mb-4">
               <textarea
                 value={mealInput}
@@ -221,7 +249,9 @@ const MealLoging = () => {
 
           {manualLogVisible && (
             <div className="bg-white rounded-xl shadow-xl p-8 mb-8 border border-gray-100">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Manual Meal Logging</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                {editingMeal ? 'Edit Meal' : 'Manual Meal Logging'}
+              </h2>
               <div className="grid grid-cols-2 gap-4">
                 {['meal_name', 'proteins', 'carbs', 'fats', 'calories', 'fibre', 'serving_size'].map((field) => (
                   <div key={field} className="mb-4">
@@ -240,10 +270,10 @@ const MealLoging = () => {
               </div>
               <div className="flex space-x-4 mt-4">
                 <button
-                  onClick={handleSaveManualMeal}
+                  onClick={editingMeal ? handleUpdateMeal : handleSaveManualMeal}
                   className="px-8 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-md transition-colors duration-200 font-semibold"
                 >
-                  Save Manual Meal
+                  {editingMeal ? 'Update Meal' : 'Save Manual Meal'}
                 </button>
                 <button
                   onClick={handleCancelManualMeal}
@@ -266,7 +296,12 @@ const MealLoging = () => {
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">{date}</h2>
                 <div className="space-y-6">
                   {mealsByDate[date].slice().reverse().map(meal => (
-                    <MealItem key={meal.mealID} meal={meal} onDelete={handleDeleteMeal} />
+                    <MealItem 
+                      key={meal.mealID} 
+                      meal={meal} 
+                      onDelete={handleDeleteMeal}
+                      onEdit={handleEditMeal} 
+                    />
                   ))}
                 </div>
               </div>
@@ -279,5 +314,3 @@ const MealLoging = () => {
 };
 
 export default MealLoging;
-
-

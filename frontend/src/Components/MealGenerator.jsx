@@ -123,7 +123,7 @@ const MealPlanGenerator = () => {
         <>
             <Navbar />
             <div className="meal-plan-container">
-                <h2>Generate Meal Plan</h2>
+                <h2>AI Meal Plan Generator<br/>Powered by Google Gemini</h2>
                 <div className="form-group">
                     <label>Days:</label>
                     <input
