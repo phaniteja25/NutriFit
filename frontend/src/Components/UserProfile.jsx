@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
+import bg_img from './image_bg.jpg';
 
 const UserProfile = () => {
     const [profile, setProfile] = useState({
@@ -84,7 +85,13 @@ const UserProfile = () => {
     return (
         <>
             <Navbar />
-            <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+            <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4"
+            style={{backgroundImage : `url(${bg_img})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundBlendMode: 'darken', // Darkens the image
+            backgroundColor: 'rgba(0,0,0,0.5)', // Black overlay with 50% opacity
+            filter: 'brightness(0.7)'}}>
                 <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
                     <h2 className="text-2xl font-bold text-gray-800 mb-6">User Profile</h2>
 

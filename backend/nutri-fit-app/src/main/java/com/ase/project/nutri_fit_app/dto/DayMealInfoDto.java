@@ -1,5 +1,8 @@
 package com.ase.project.nutri_fit_app.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DayMealInfoDto {
 
     private String type;       // e.g., Breakfast, Lunch, Dinner

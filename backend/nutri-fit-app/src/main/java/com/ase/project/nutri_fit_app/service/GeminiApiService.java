@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class GeminiApiService {
 
     private static final String API_KEY = "AIzaSyAfmWGt7gGP0b8t06Iv5mSQHhuLbN9iV3E";
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key="+API_KEY;
+    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-exp-1114:generateContent?key="+API_KEY;
 
 
     private final RestTemplate restTemplate;
@@ -83,13 +83,13 @@ public class GeminiApiService {
     }
 
     public MealPlanResponseDto parseMealPlanResponse(String jsonResponse) {
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                return objectMapper.readValue(jsonResponse, MealPlanResponseDto.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(jsonResponse, MealPlanResponseDto.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
@@ -150,12 +150,12 @@ public class GeminiApiService {
 
         // Additional requirements
 
-            // Default reminders if no additional requirements are provided
-            promptBuilder.append("4. Additional Reminders:\n")
-                    .append("   - Hydration: Recommend drinking plenty of water throughout the day.\n")
-                    .append("   - Snacks: Suggest healthy snacks like nuts, fruits, or yogurt.\n")
-                    .append("   - Customization: Advise adjusting portion sizes and ingredients to individual preferences.\n")
-                    .append("   - Variety: Encourage experimenting with different recipes and ingredients.\n");
+        // Default reminders if no additional requirements are provided
+        promptBuilder.append("4. Additional Reminders:\n")
+                .append("   - Hydration: Recommend drinking plenty of water throughout the day.\n")
+                .append("   - Snacks: Suggest healthy snacks like nuts, fruits, or yogurt.\n")
+                .append("   - Customization: Advise adjusting portion sizes and ingredients to individual preferences.\n")
+                .append("   - Variety: Encourage experimenting with different recipes and ingredients.\n");
 
 
         // Add JSON structure details
@@ -191,5 +191,4 @@ public class GeminiApiService {
         return promptBuilder.toString();
     }
 }
-
 
