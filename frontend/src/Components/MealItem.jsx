@@ -1,7 +1,7 @@
 import React from 'react';
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 
-const MealItem = ({ meal, onDelete }) => {
+const MealItem = ({ meal, onDelete, onEdit }) => {
   const formatMealName = (name) => {
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
   };
@@ -10,19 +10,32 @@ const MealItem = ({ meal, onDelete }) => {
     onDelete(meal.mealID);
   };
 
+  const handleEdit = () => {
+    onEdit(meal);
+  };
+
   return (
     <div className="bg-white shadow-lg rounded-xl p-6 hover:shadow-xl transition-shadow duration-300 mb-6 mx-4 md:mx-0 relative">
       <h3 className="text-xl font-bold text-gray-800 pb-4 border-b border-gray-100">
         {formatMealName(meal.mealName)}
       </h3>
 
-      <button
-        onClick={handleDelete}
-        className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors"
-        title="Delete Meal"
-      >
-        <FaTrash size={20} />
-      </button>
+      <div className="absolute top-4 right-4 flex space-x-3">
+        <button
+          onClick={handleEdit}
+          className="text-blue-500 hover:text-blue-700 transition-colors"
+          title="Edit Meal"
+        >
+          <FaEdit size={20} />
+        </button>
+        <button
+          onClick={handleDelete}
+          className="text-red-500 hover:text-red-700 transition-colors"
+          title="Delete Meal"
+        >
+          <FaTrash size={20} />
+        </button>
+      </div>
 
       <div className="mt-4">
         <table className="w-full text-left text-gray-700">

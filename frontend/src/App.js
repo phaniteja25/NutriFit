@@ -1,7 +1,6 @@
 import React from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
-import AboutUs from './Components/AboutUs';
 import Dashboard from './Components/Dashboard';
 import History from './Components/History';
 import Login from './Components/Login';
@@ -32,7 +31,6 @@ const App = () => {
         />
         <Route path="/mealgenerator" element={<MealGenerator />}/>
         <Route path="/mealloging" element={<MealLoging />}/>
-        <Route path="/aboutus" element={<AboutUs />}/>
         <Route path="/userprofile" element={<UserProfile />}/>
         <Route path="/history" element={<History />}/>
       </Routes>

@@ -1,0 +1,8 @@
+PASSED: Page loaded, title is 'React App'
+PASSED: Sign up with user 'testUser7'
+PASSED: Login with user 'testUser7'
+PASSED: Added meal 'Pizza'
+VERIFIED: Meal added is 'Pizza'
+FAILED: Meal plan does not contain exactly 7 days
+PASSED: Update user info of user 'testUser7'
+PASSED: Logged out user 'testUser7'

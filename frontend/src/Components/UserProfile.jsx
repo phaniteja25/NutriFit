@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
+import bg_img from './image_bg.jpg';
 
 const UserProfile = () => {
     const [profile, setProfile] = useState({
@@ -43,17 +44,6 @@ const UserProfile = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
-        // Only allow numbers and a single decimal point for height and weight fields
-        if ((name === 'height' || name === 'weight') && !/^\d*\.?\d*$/.test(value)) {
-            return; // Prevents updating the state if the input is invalid
-        }
-
-        // Only allow whole numbers for the age field
-        if (name === 'age' && !/^\d*$/.test(value)) {
-            return; // Prevents updating the state if the input is invalid
-        }
-
         setProfile((prevState) => ({
             ...prevState,
             [name]: value,
@@ -95,7 +85,13 @@ const UserProfile = () => {
     return (
         <>
             <Navbar />
-            <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+            <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4"
+            style={{backgroundImage : `url(${bg_img})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundBlendMode: 'darken', // Darkens the image
+            backgroundColor: 'rgba(0,0,0,0.5)', // Black overlay with 50% opacity
+            filter: 'brightness(0.7)'}}>
                 <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
                     <h2 className="text-2xl font-bold text-gray-800 mb-6">User Profile</h2>
 
@@ -174,8 +170,8 @@ const UserProfile = () => {
                     <div className="mb-4">
                         <label className="block text-gray-600 mb-1">Activity Level</label>
                         <select
-                            name="activityLevel"
-                            value={profile.activity_level}
+                            name="activity_level"
+                            value={profile.activity_level || ""}
                             onChange={handleChange}
                             disabled={!isEditing}
                             className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}

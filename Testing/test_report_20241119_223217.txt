@@ -1,0 +1,30 @@
+ERROR: Failed to load page - Message: target frame detached
+  (failed to check if window was closed: disconnected: Unable to receive message from renderer)
+  (Session info: chrome=131.0.6778.70)
+Stacktrace:
+	GetHandleVerifier [0x00007FF71B736CB5+28821]
+	(No symbol) [0x00007FF71B6A3840]
+	(No symbol) [0x00007FF71B5455B9]
+	(No symbol) [0x00007FF71B5335FB]
+	(No symbol) [0x00007FF71B531274]
+	(No symbol) [0x00007FF71B531D1F]
+	(No symbol) [0x00007FF71B54084E]
+	(No symbol) [0x00007FF71B55492D]
+	(No symbol) [0x00007FF71B55B10A]
+	(No symbol) [0x00007FF71B532484]
+	(No symbol) [0x00007FF71B55447A]
+	(No symbol) [0x00007FF71B5DF75A]
+	(No symbol) [0x00007FF71B5BF0A3]
+	(No symbol) [0x00007FF71B58A778]
+	(No symbol) [0x00007FF71B58B8E1]
+	GetHandleVerifier [0x00007FF71BA6FCAD+3408013]
+	GetHandleVerifier [0x00007FF71BA8741F+3504127]
+	GetHandleVerifier [0x00007FF71BA7B5FD+3455453]
+	GetHandleVerifier [0x00007FF71B7FBDBB+835995]
+	(No symbol) [0x00007FF71B6AEB5F]
+	(No symbol) [0x00007FF71B6AA814]
+	(No symbol) [0x00007FF71B6AA9AD]
+	(No symbol) [0x00007FF71B69A199]
+	BaseThreadInitThunk [0x00007FFC1F4ADBE7+23]
+	RtlUserThreadStart [0x00007FFC20805A4C+44]
+

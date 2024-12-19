@@ -1,3 +1,4 @@
+
 import {
     BarElement,
     CategoryScale,
@@ -7,14 +8,17 @@ import {
     Title,
     Tooltip,
 } from "chart.js";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from "./Navbar";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
 
 const formatDate = (dateString) => {
     const [year, month, day] = dateString.split("-");
@@ -26,6 +30,7 @@ const formatDate = (dateString) => {
 };
 
 const Dashboard = () => {
+
     const [userInfo, setUserInfo] = useState({});
     const [circularData, setCircularData] = useState({
         totalCalories: 0,
@@ -39,6 +44,7 @@ const Dashboard = () => {
 
     const authToken = localStorage.getItem("token");
     const navigate = useNavigate();
+
 
     const fetchUserInfo = async () => {
         try {
@@ -122,6 +128,76 @@ const Dashboard = () => {
         fetchData();
     }, []);
 
+    const calorieToastShown = useRef(false);
+    const fatToastShown = useRef(false);
+    const carbsToastShown = useRef(false);
+    const proteinToastShown = useRef(false);
+
+    useEffect(() => {
+        const triggerNotification = () => {
+            const remaining = Math.round(((userInfo.total_cal_intake - circularData.totalCalories) / userInfo.total_cal_intake) * 100);
+            
+            if (!calorieToastShown.current && Math.round(circularData.totalCalories) === Math.round(userInfo.total_cal_intake)) {
+                toast.success("🎉 Congratulations! You've achieved your daily calorie intake goal!", {
+                    position: "top-right",
+                });
+                calorieToastShown.current = true;
+            }
+    
+            if (!calorieToastShown.current && Math.round(circularData.totalCalories) > Math.round(userInfo.total_cal_intake)) {
+                toast.warning("⚠️ You've exceeded your daily calorie intake goal!", {
+                    position: "top-right",
+                });
+                calorieToastShown.current = true;
+            }
+    
+            if (!fatToastShown.current && Math.round(circularData.totalFats) === Math.round(userInfo.reqd_fat)) {
+                toast.success("🎉 Congratulations! You've achieved your daily fat intake goal!", {
+                    position: "top-right",
+                });
+                fatToastShown.current = true;
+            }
+    
+            if (!fatToastShown.current && Math.round(circularData.totalFats) > Math.round(userInfo.reqd_fat)) {
+                toast.warning("⚠️ You've exceeded your daily fat intake goal!", {
+                    position: "top-right",
+                });
+                fatToastShown.current = true;
+            }
+    
+            if (!carbsToastShown.current && Math.round(circularData.totalCarbs) === Math.round(userInfo.reqd_carbs)) {
+                toast.success("🎉 Congratulations! You've achieved your daily carb intake goal!", {
+                    position: "top-right",
+                });
+                carbsToastShown.current = true;
+            }
+    
+            if (!carbsToastShown.current && Math.round(circularData.totalCarbs) > Math.round(userInfo.reqd_carbs)) {
+                toast.warning("⚠️ You've exceeded your daily carb intake goal!", {
+                    position: "top-right",
+                });
+                carbsToastShown.current = true;
+            }
+    
+            if (!proteinToastShown.current && Math.round(circularData.totalProteins) === Math.round(userInfo.reqd_protein)) {
+                toast.success("🎉 Congratulations! You've achieved your daily protein intake goal!", {
+                    position: "top-right",
+                });
+                proteinToastShown.current = true;
+            }
+    
+            if (!proteinToastShown.current && Math.round(circularData.totalProteins) > Math.round(userInfo.reqd_protein)) {
+                toast.warning("⚠️ You've exceeded your daily protein intake goal!", {
+                    position: "top-right",
+                });
+                proteinToastShown.current = true;
+            }
+        };
+    
+        triggerNotification();
+    }, [circularData, userInfo]);
+    
+    
     const renderCircularProgress = (value, goal, label, actual, required) => (
         <div style={{ width: "100px", margin: "10px", textAlign: "center" }}>
             <CircularProgressbar
@@ -144,24 +220,35 @@ const Dashboard = () => {
     );
 
     const lastSevenDays = Object.keys(barData)
-        .slice(0, 7)
-        .reverse();
+    .sort((a, b) => new Date(a) - new Date(b))
+    .slice(-7);
 
+
+    const macroColors = {
+        calories: "rgba(255, 99, 132, 0.6)",
+        carbs: "rgba(54, 162, 235, 0.6)",
+        fats: "rgba(255, 206, 86, 0.6)",
+        proteins: "rgba(75, 192, 192, 0.6)"
+    };
+    
     const createChartData = (macro) => ({
         labels: lastSevenDays,
         datasets: [
             {
                 label: macro,
                 data: lastSevenDays.map(date => barData[date]?.[macro] || 0),
-                backgroundColor: "rgba(75, 192, 192, 0.6)",
+                backgroundColor: macroColors[macro],
             }
         ]
     });
+    
 
     return (
         <>
             <Navbar />
-            <div style={{ width: '100vw', height: '100vh', backgroundColor: '#f5f5f5', padding: '24px', boxSizing: 'border-box' }}>
+            <ToastContainer />
+            <div style={{padding: "24"}}>
+            <div style={{ width: '100vw', minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '24px', boxSizing: 'border-box',overflow: 'hidden' }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                     <div style={{ marginRight: '20px', textAlign: 'left' }}>
                         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
@@ -178,10 +265,16 @@ const Dashboard = () => {
                             textAlign: 'center',
                             fontSize: '24px',
                             fontWeight: 'bold',
+                            margin:'0px',
+                            paddingBottom:'10px',
+                            paddingRight:'140px',
+                            // display:'flex',
+                            alignItems:'flex-end',
                             color: '#333',
                             marginBottom: '20px',
                             textTransform: 'uppercase',
-                            letterSpacing: '1px'
+                            letterSpacing: '1px',
+                            // marginRight: '10px'
                         }}>
                             Daily Nutritional Goals Progress
                         </h3>
@@ -208,28 +301,28 @@ const Dashboard = () => {
                         Weekly Nutrient Intake Overview
                     </h3>
                     <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around", margin: "20px 0" }}>
-                        <div style={{ width: "20%", marginBottom: "20px" }}>
-                            <h3>Calories</h3>
-                            <Bar data={createChartData("calories")} options={{ responsive: true }} />
-                        </div>
-                        <div style={{ width: "20%", marginBottom: "20px" }}>
-                            <h3>Carbs</h3>
-                            <Bar data={createChartData("carbs")} options={{ responsive: true }} />
-                        </div>
+                    <div style={{ width: "30%", marginBottom: "20px" }}>
+                        <h3>Calories</h3>
+                        <Bar data={createChartData("calories")} options={{ responsive: true }} />
+                    </div>
+                    <div style={{ width: "30%", marginBottom: "20px" }}>
+                        <h3>Carbs</h3>
+                        <Bar data={createChartData("carbs")} options={{ responsive: true }} />
+                    </div>
                     </div>
                     <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around", margin: "20px 0" }}>
-                        <div style={{ width: "20%", marginBottom: "20px" }}>
-                            <h3>Fats</h3>
-                            <Bar data={createChartData("fats")} options={{ responsive: true }} />
-                        </div>
-                        <div style={{ width: "20%", marginBottom: "20px" }}>
-                            <h3>Proteins</h3>
-                            <Bar data={createChartData("proteins")} options={{ responsive: true }} />
-                        </div>
+                    <div style={{ width: "30%", marginBottom: "20px" }}>
+                        <h3>Fats</h3>
+                        <Bar data={createChartData("fats")} options={{ responsive: true }} />
+                    </div>
+                    <div style={{ width: "30%", marginBottom: "20px" }}>
+                        <h3>Proteins</h3>
+                        <Bar data={createChartData("proteins")} options={{ responsive: true }} />
+                    </div>
                     </div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                    <button 
+                    <button
                         onClick={() => navigate("/history")}
                         style={{
                             padding: '10px 20px',
@@ -245,6 +338,7 @@ const Dashboard = () => {
                         View History
                     </button>
                 </div>
+            </div>
             </div>
         </>
     );

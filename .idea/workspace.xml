@@ -5,10 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d7b7560-920f-4cde-97dc-d158a7e0295e" name="Changes" comment="workspace.xml updated">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Testing/signup_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Testing/signup_data.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Testing/system_testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Testing/system_testing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/nutri-fit-app/src/main/java/com/ase/project/nutri_fit_app/dto/DayMealInfoDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/nutri-fit-app/src/main/java/com/ase/project/nutri_fit_app/dto/DayMealInfoDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/nutri-fit-app/src/main/java/com/ase/project/nutri_fit_app/service/GeminiApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/nutri-fit-app/src/main/java/com/ase/project/nutri_fit_app/service/GeminiApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Components/UserProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/UserProfile.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +38,9 @@
     &quot;accountId&quot;: &quot;7f266cf2-a83c-48ee-9c3e-78d70ce50e95&quot;
   }
 }</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 1
@@ -48,11 +54,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.NutriFitAppApplication.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "dashboard",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Gurpreet Kooner/Downloads/To Be Deleted/NutriFit-main"
+    "last_opened_file_path": "C:/Users/phani/Teja Documents/Sampatti/sampatti",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   },
   "keyToStringList": {
     "ChangesTree.GroupingKeys": [
@@ -62,19 +70,31 @@
   }
 }]]></component>
   <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="NutriFit" />
+    <configuration name="NutriFitAppApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.ase.project.nutri_fit_app.NutriFitAppApplication" />
+      <module name="nutri-fit-app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ase.project.nutri_fit_app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="NutriFit" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.NutriFitAppApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.1-openjdk-21.0.1-4caba194b151-23eed401" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
