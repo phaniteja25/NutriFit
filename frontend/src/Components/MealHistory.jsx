@@ -13,7 +13,7 @@ const MealHistory = ({ meal = {}, onDelete }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-xl p-6 hover:shadow-xl transition-shadow duration-300 mb-6 mx-4 md:mx-0 relative">
+    <div className="bg-white bg-opacity-70 shadow-lg rounded-xl p-6 hover:shadow-xl transition-shadow duration-300 mb-6 mx-4 md:mx-0 relative">
       <h3 className="text-xl font-bold text-gray-800 pb-4 border-b border-gray-100">
         {formatMealName(meal.mealName)}
       </h3>

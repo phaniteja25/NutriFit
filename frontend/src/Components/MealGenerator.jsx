@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
+import bg_img from './image_bg.jpg';
 
 const MealPlanGenerator = () => {
     const [noOfDaysPlan, setNoOfDaysPlan] = useState(2);
@@ -122,85 +123,103 @@ const MealPlanGenerator = () => {
     return (
         <>
             <Navbar />
-            <div className="meal-plan-container">
-                <h2>AI Meal Plan Generator<br/>Powered by Google Gemini</h2>
-                <div className="form-group">
-                    <label>Days:</label>
-                    <input
-                        type="number"
-                        value={noOfDaysPlan}
-                        onChange={(e) => setNoOfDaysPlan(e.target.value)}
-                        min="2"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Cuisine: Ex: Indian, Chinese, Mexican </label>
-                    <input
-                        type="text"
-                        value={cuisineType}
-                        onChange={(e) => setCuisineType(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Food Preference: Ex: Veg, NonVeg </label>
-                    <input
-                        type="text"
-                        value={foodPref}
-                        onChange={(e) => setFoodPref(e.target.value)}
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Allergies (comma separated) Ex: Egg,Tofu Soy:</label>
-                    <input
-                        type="text"
-                        value={allergies.join(', ')}
-                        onChange={handleAllergiesChange}
-                    />
-                </div>
-                <button onClick={handleGenerateMealPlan} disabled={loading}>
-                    {loading ? "Generating..." : "Generate"}
-                </button>
+            <div
+                className="min-h-screen p-6"
+                style={{
+                    backgroundImage: `url(${bg_img})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundBlendMode: 'darken',
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                }}
+            >
+                <div className="meal-plan-container bg-white p-8 rounded-lg shadow-lg bg-opacity-90">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">AI Meal Plan Generator<br />Powered by Google Gemini</h2>
+                    <div className="form-group mb-4">
+                        <label className="block text-gray-700 font-bold mb-2">Days:</label>
+                        <input
+                            type="number"
+                            value={noOfDaysPlan}
+                            onChange={(e) => setNoOfDaysPlan(e.target.value)}
+                            min="2"
+                            className="w-full p-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div className="form-group mb-4">
+                        <label className="block text-gray-700 font-bold mb-2">Cuisine: Ex: Indian, Chinese, Mexican</label>
+                        <input
+                            type="text"
+                            value={cuisineType}
+                            onChange={(e) => setCuisineType(e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div className="form-group mb-4">
+                        <label className="block text-gray-700 font-bold mb-2">Food Preference: Ex: Veg, NonVeg</label>
+                        <input
+                            type="text"
+                            value={foodPref}
+                            onChange={(e) => setFoodPref(e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div className="form-group mb-4">
+                        <label className="block text-gray-700 font-bold mb-2">Allergies (comma separated): Ex: Egg, Tofu, Soy</label>
+                        <input
+                            type="text"
+                            value={allergies.join(', ')}
+                            onChange={handleAllergiesChange}
+                            className="w-full p-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <button
+                        onClick={handleGenerateMealPlan}
+                        disabled={loading}
+                        className={`w-full py-2 text-white font-bold rounded-lg ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}`}
+                    >
+                        {loading ? "Generating..." : "Generate"}
+                    </button>
 
-                {warningMessage && (
-                    <p style={{ color: 'red', marginTop: '10px' }}>{warningMessage}</p>
+                    {warningMessage && (
+                        <p className="text-red-500 mt-4">{warningMessage}</p>
+                    )}
+                </div>
+
+                {mealPlan && !loading && (
+                    <div className="generated-meal-plan mt-8 bg-white p-8 rounded-lg shadow-lg">
+                        <div className="meal-plan-header mb-4">
+                            <h3 className="text-xl font-bold text-gray-800">Generated Meal Plan</h3>
+                        </div>
+                        <div className="meal-plan-days">
+                            {mealPlan.mealPlan.map((dayMeal, index) => (
+                                <div key={index} className="meal-card mb-4 p-4 bg-gray-100 rounded-lg">
+                                    <h4 className="text-lg font-bold mb-2">{dayMeal.day}</h4>
+                                    {dayMeal.meals.map((meal, mealIndex) => (
+                                        <div key={mealIndex} className="meal-info mb-2">
+                                            <p><strong>Name:</strong> {meal.name}</p>
+                                            <p>Type: {meal.type}</p>
+                                            <p>Protein: {meal.protein}g</p>
+                                            <p>Carbs: {meal.carbs}g</p>
+                                            <p>Fat: {meal.fat}g</p>
+                                            <p>Calories: {meal.calories}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex justify-center mt-4">
+                            <button
+                                onClick={downloadCSV}
+                                className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
+                            >
+                                Export to CSV
+                            </button>
+                        </div>
+                    </div>
                 )}
             </div>
-
-            {mealPlan && !loading && (
-                <div className="generated-meal-plan">
-                    <div className="meal-plan-header">
-                        <h3>Generated Meal Plan</h3>
-                    </div>
-                    <div className="meal-plan-days">
-                        {mealPlan.mealPlan.map((dayMeal, index) => (
-                            <div key={index} className="meal-card">
-                                <h4>{dayMeal.day}</h4>
-                                {dayMeal.meals.map((meal, mealIndex) => (
-                                    <div key={mealIndex} className="meal-info">
-                                        <p><strong>Name:</strong> {meal.name}</p>
-                                        <p>Type: {meal.type}</p>
-                                        <p>Protein: {meal.protein}g</p>
-                                        <p>Carbs: {meal.carbs}g</p>
-                                        <p>Fat: {meal.fat}g</p>
-                                        <p>Calories: {meal.calories}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex justify-center mt-4">
-                        <button
-                            onClick={downloadCSV}
-                            className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
-                        >
-                            Export to CSV
-                        </button>
-                    </div>
-                </div>
-            )}
         </>
     );
 };
 
 export default MealPlanGenerator;
-

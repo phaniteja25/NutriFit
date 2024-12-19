@@ -9,9 +9,9 @@ const UserProfile = () => {
         height: '',
         weight: '',
         age: '',
-        gender: '',
-        activity_level: '',
-        goal: '',
+        gender: 'Male', // Default value
+        activity_level: 'Sedentary (little or no exercise)', // Default value
+        goal: 'Reduce Fat by 30%', // Default value
     });
 
     const [isEditing, setIsEditing] = useState(false);
@@ -32,13 +32,15 @@ const UserProfile = () => {
                     Authorization: `Bearer ${authToken}`,
                 },
             });
-            if (!response.ok) throw new Error('Failed to fetch user info');
-            
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch user info: ${response.statusText}`);
+            }
+
             const data = await response.json();
             setProfile(data);
-            console.log(data);
         } catch (error) {
-            console.error('Error fetching user info:', error);
+            console.error('Error fetching user info:', error.message);
         }
     };
 
@@ -55,6 +57,11 @@ const UserProfile = () => {
     };
 
     const handleSaveClick = async () => {
+        if (!profile.height || !profile.weight || !profile.age) {
+            alert('Please fill out all fields before saving.');
+            return;
+        }
+
         try {
             const response = await fetch('http://localhost:8080/user/update_user_info', {
                 method: 'PUT',
@@ -72,29 +79,35 @@ const UserProfile = () => {
                 }),
             });
 
-            if (!response.ok) throw new Error('Failed to update user info');
+            if (!response.ok) {
+                throw new Error(`Failed to update user info: ${response.statusText}`);
+            }
 
             const updatedData = await response.json();
             setProfile(updatedData);
             setIsEditing(false);
         } catch (error) {
-            console.error('Error updating user info:', error);
+            console.error('Error updating user info:', error.message);
         }
     };
 
     return (
         <>
             <Navbar />
-            <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4"
-            style={{backgroundImage : `url(${bg_img})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundBlendMode: 'darken', // Darkens the image
-            backgroundColor: 'rgba(0,0,0,0.5)', // Black overlay with 50% opacity
-            filter: 'brightness(0.7)'}}>
+            <div
+                className="flex justify-center items-center min-h-screen p-4"
+                style={{
+                    backgroundImage: `url(${bg_img})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundBlendMode: 'darken',
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                }}
+            >
                 <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
                     <h2 className="text-2xl font-bold text-gray-800 mb-6">User Profile</h2>
 
+                    {/* Username Field */}
                     <div className="mb-4">
                         <label className="block text-gray-600 mb-1">Username</label>
                         <input
@@ -102,10 +115,11 @@ const UserProfile = () => {
                             name="username"
                             value={profile.username}
                             readOnly
-                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 bg-gray-100"
+                            className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-100"
                         />
                     </div>
 
+                    {/* Email Field */}
                     <div className="mb-4">
                         <label className="block text-gray-600 mb-1">Email</label>
                         <input
@@ -113,46 +127,28 @@ const UserProfile = () => {
                             name="email"
                             value={profile.email}
                             readOnly
-                            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200 bg-gray-100"
+                            className="w-full px-4 py-2 border border-gray-300 rounded bg-gray-100"
                         />
                     </div>
 
-                    <div className="mb-4">
-                        <label className="block text-gray-600 mb-1">Height</label>
-                        <input
-                            type="text"
-                            name="height"
-                            value={profile.height}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
-                        />
-                    </div>
+                    {/* Dynamic Fields */}
+                    {['height', 'weight', 'age'].map((field) => (
+                        <div className="mb-4" key={field}>
+                            <label className="block text-gray-600 mb-1">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+                            <input
+                                type={field === 'age' ? 'number' : 'text'}
+                                name={field}
+                                value={profile[field]}
+                                onChange={handleChange}
+                                disabled={!isEditing}
+                                className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${
+                                    isEditing ? 'bg-white' : 'bg-gray-100'
+                                }`}
+                            />
+                        </div>
+                    ))}
 
-                    <div className="mb-4">
-                        <label className="block text-gray-600 mb-1">Weight</label>
-                        <input
-                            type="text"
-                            name="weight"
-                            value={profile.weight}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="block text-gray-600 mb-1">Age</label>
-                        <input
-                            type="number"
-                            name="age"
-                            value={profile.age}
-                            onChange={handleChange}
-                            disabled={!isEditing}
-                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
-                        />
-                    </div>
-
+                    {/* Gender Field */}
                     <div className="mb-4">
                         <label className="block text-gray-600 mb-1">Gender</label>
                         <select
@@ -160,23 +156,27 @@ const UserProfile = () => {
                             value={profile.gender}
                             onChange={handleChange}
                             disabled={!isEditing}
-                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
+                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${
+                                isEditing ? 'bg-white' : 'bg-gray-100'
+                            }`}
                         >
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
                         </select>
                     </div>
 
+                    {/* Activity Level Field */}
                     <div className="mb-4">
                         <label className="block text-gray-600 mb-1">Activity Level</label>
                         <select
                             name="activity_level"
-                            value={profile.activity_level || ""}
+                            value={profile.activity_level}
                             onChange={handleChange}
                             disabled={!isEditing}
-                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
+                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${
+                                isEditing ? 'bg-white' : 'bg-gray-100'
+                            }`}
                         >
-                            <option value="">Select Activity Level</option>
                             <option value="Sedentary (little or no exercise)">Sedentary (little or no exercise)</option>
                             <option value="Lightly active (training/sports 2-3 days/week)">Lightly active (training/sports 2-3 days/week)</option>
                             <option value="Moderately active (training/sports 4-5 days/week)">Moderately active (training/sports 4-5 days/week)</option>
@@ -186,6 +186,7 @@ const UserProfile = () => {
                         </select>
                     </div>
 
+                    {/* Goal Field */}
                     <div className="mb-4">
                         <label className="block text-gray-600 mb-1">Goal</label>
                         <select
@@ -193,13 +194,14 @@ const UserProfile = () => {
                             value={profile.goal}
                             onChange={handleChange}
                             disabled={!isEditing}
-                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${isEditing ? 'bg-white' : 'bg-gray-100'}`}
+                            className={`w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring ${
+                                isEditing ? 'bg-white' : 'bg-gray-100'
+                            }`}
                         >
-                            <option value="">Select Goal</option>
                             <option value="Reduce Fat by 30%">Reduce Fat by 30%</option>
                             <option value="Reduce Fat by 20%">Reduce Fat by 20%</option>
                             <option value="Reduce Fat by 10%">Reduce Fat by 10%</option>
-                            <option value="Muscle Gain">Maintenance or a Slight Surplus</option>
+                            <option value="Muscle Gain">Muscle Gain</option>
                         </select>
                     </div>
 

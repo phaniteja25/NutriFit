@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MealItem from './MealItem';
 import Navbar from './Navbar';
+import bg_img from './image_bg.jpg';
 
 const MealLoging = () => {
   const [mealsByDate, setMealsByDate] = useState({});
@@ -215,7 +216,16 @@ const MealLoging = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-200 py-8">
+      <div
+        className="min-h-screen flex flex-col justify-center items-center"
+        style={{
+          backgroundImage: `url(${bg_img})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundBlendMode: 'darken',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+        }}
+      >
         <div className="max-w-5xl mx-auto px-6 md:px-8">
           <div className="bg-white rounded-xl shadow-xl p-8 mb-8 border border-gray-100">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Meal</h2>
