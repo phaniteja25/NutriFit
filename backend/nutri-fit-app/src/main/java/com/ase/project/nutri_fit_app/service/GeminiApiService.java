@@ -20,8 +20,11 @@ import java.util.ArrayList;
 @Service
 public class GeminiApiService {
 
-    private static final String API_KEY = "AIzaSyAfmWGt7gGP0b8t06Iv5mSQHhuLbN9iV3E";
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-exp-1114:generateContent?key="+API_KEY;
+    @Value("${GEMINI_API_KEY}")
+    private static String API_KEY;
+
+
+    private final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-exp-1114:generateContent?key="+API_KEY;
 
 
     private final RestTemplate restTemplate;

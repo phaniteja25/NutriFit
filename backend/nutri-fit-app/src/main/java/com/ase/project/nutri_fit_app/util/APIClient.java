@@ -1,5 +1,6 @@
 package com.ase.project.nutri_fit_app.util;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriUtils;
 
@@ -11,13 +12,16 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class APIClient {
-    
+
+    @Value("${API_KEY}")
+    String apiKey;
+
     public String sendRequest(String prompt) throws  Exception{
 
         // Create an HttpClient instance
         HttpClient client = HttpClient.newHttpClient();
 
-        String apiKey = System.getenv("API_KEY");
+
 
         String apiUrl = "https://api.calorieninjas.com/v1/nutrition?query="+ UriUtils.encode(prompt, StandardCharsets.UTF_8);
 

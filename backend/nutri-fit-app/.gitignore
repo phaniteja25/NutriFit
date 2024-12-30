@@ -29,5 +29,11 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+/target/
+*.class
+*.jar
+.env
 ### VS Code ###
 .vscode/
+
+
