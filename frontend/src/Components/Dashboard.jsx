@@ -46,7 +46,7 @@ const Dashboard = () => {
 
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch("http://localhost:8080/user/userinfo", {
+            const response = await fetch("https://nutrifit-production-d71d.up.railway.app/user/userinfo", {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${authToken}`
@@ -64,7 +64,7 @@ const Dashboard = () => {
 
     const fetchCurrentDaySummary = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/meals/current_day_summary", {
+            const response = await fetch("https://nutrifit-production-d71d.up.railway.app/api/meals/current_day_summary", {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${authToken}`
@@ -83,7 +83,7 @@ const Dashboard = () => {
 
     const fetchMeals = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/meals/get_all_meals", {
+            const response = await fetch("https://nutrifit-production-d71d.up.railway.app/api/meals/get_all_meals", {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${authToken}`

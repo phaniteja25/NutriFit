@@ -15,7 +15,7 @@ const History = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:8080/api/meals/get_all_meals', {
+      const response = await fetch('https://nutrifit-production-d71d.up.railway.app/api/meals/get_all_meals', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -50,7 +50,7 @@ const History = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:8080/api/meals/delete_meal/${mealID}`, {
+      const response = await fetch(`https://nutrifit-production-d71d.up.railway.app/api/meals/delete_meal/${mealID}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

@@ -123,7 +123,7 @@ const Signup = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:8080/user/signup', {
+            const response = await fetch('https://nutrifit-production-d71d.up.railway.app/user/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

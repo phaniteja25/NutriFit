@@ -58,7 +58,7 @@ const Login = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/user/update-password', {
+            const response = await fetch('https://nutrifit-production-d71d.up.railway.app/user/update-password', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -81,7 +81,7 @@ const Login = () => {
         e.preventDefault();
         
         try {
-            const response = await fetch('http://localhost:8080/user/generate-token', {
+            const response = await fetch('https://nutrifit-production-d71d.up.railway.app/user/generate-token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

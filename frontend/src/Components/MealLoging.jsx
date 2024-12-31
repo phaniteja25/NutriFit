@@ -28,7 +28,7 @@ const MealLoging = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:8080/api/meals/get_current_day_meals', {
+      const response = await fetch('https://nutrifit-production-d71d.up.railway.app/api/meals/get_current_day_meals', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -58,7 +58,7 @@ const MealLoging = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:8080/api/meals/delete_meal/${mealID}`, {
+      const response = await fetch(`https://nutrifit-production-d71d.up.railway.app/api/meals/delete_meal/${mealID}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ const MealLoging = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:8080/api/meals/manual_log', {
+      const response = await fetch('https://nutrifit-production-d71d.up.railway.app/api/meals/manual_log', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -126,7 +126,7 @@ const MealLoging = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/api/meals/update_meal/${editingMeal.mealID}`, {
+      const response = await fetch(`https://nutrifit-production-d71d.up.railway.app/api/meals/update_meal/${editingMeal.mealID}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -193,7 +193,7 @@ const MealLoging = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:8080/api/meals/log?prompt=${encodeURIComponent(mealInput)}`, {
+      const response = await fetch(`https://nutrifit-production-d71d.up.railway.app/api/meals/log?prompt=${encodeURIComponent(mealInput)}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
