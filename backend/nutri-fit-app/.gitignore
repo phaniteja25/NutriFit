@@ -32,7 +32,7 @@ build/
 /target/
 *.class
 *.jar
-src/main/resources/.env
+.env
 ### VS Code ###
 .vscode/
 
