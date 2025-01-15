@@ -7,11 +7,6 @@
     <list default="true" id="3d7b7560-920f-4cde-97dc-d158a7e0295e" name="Changes" comment="workspace.xml updated">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Testing/signup_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Testing/signup_data.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Testing/system_testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Testing/system_testing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/nutri-fit-app/src/main/java/com/ase/project/nutri_fit_app/dto/DayMealInfoDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/nutri-fit-app/src/main/java/com/ase/project/nutri_fit_app/dto/DayMealInfoDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/nutri-fit-app/src/main/java/com/ase/project/nutri_fit_app/service/GeminiApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/nutri-fit-app/src/main/java/com/ase/project/nutri_fit_app/service/GeminiApiService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/Components/UserProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Components/UserProfile.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,25 +46,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.NutriFitAppApplication.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "dashboard",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/phani/Teja Documents/Sampatti/sampatti",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;Application.NutriFitAppApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.nutri-fit-app/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Maven. [clean,package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.nutri-fit-app [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.nutri-fit-app [package].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/phani/Teja Documents/Sampatti/sampatti&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   },
-  "keyToStringList": {
-    "ChangesTree.GroupingKeys": [
-      "directory",
-      "module"
+  &quot;keyToStringList&quot;: {
+    &quot;ChangesTree.GroupingKeys&quot;: [
+      &quot;directory&quot;,
+      &quot;module&quot;
     ]
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\phani\OneDrive\Desktop\NutriFit_new\NutriFit\backend\nutri-fit-app" />
+      <recent name="C:\Users\phani\OneDrive\Desktop\NutriFit_new\NutriFit\backend\nutri-fit-app\src" />
+      <recent name="C:\Users\phani\OneDrive\Desktop\NutriFit_new\NutriFit\backend\nutri-fit-app\src\main\resources" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.NutriFitAppApplication">
     <configuration name="NutriFitAppApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.ase.project.nutri_fit_app.NutriFitAppApplication" />
       <module name="nutri-fit-app" />
@@ -83,18 +90,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="nutri-fit-app/Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="sourceFilePath" value="backend/nutri-fit-app/Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.NutriFitAppApplication" />
+        <item itemvalue="Docker.nutri-fit-app/Dockerfile" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="jdk-21.0.1-openjdk-21.0.1-4caba194b151-23eed401" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

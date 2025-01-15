@@ -24,10 +24,11 @@ public class GeminiApiService {
     private static String API_KEY;
 
 
-    private final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-exp-1114:generateContent?key="+API_KEY;
+    private final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key="+API_KEY;
 
 
     private final RestTemplate restTemplate;
+
 
     @Autowired
     UserRepository userRepository;
