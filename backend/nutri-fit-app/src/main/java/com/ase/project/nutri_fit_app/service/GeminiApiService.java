@@ -20,11 +20,8 @@ import java.util.ArrayList;
 @Service
 public class GeminiApiService {
 
-    @Value("${GEMINI_API_KEY}")
-    private static String API_KEY;
-
-
-    private final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key="+API_KEY;
+    private final String apiKey;
+    private final String apiUrl;
 
 
     private final RestTemplate restTemplate;
@@ -33,8 +30,12 @@ public class GeminiApiService {
     @Autowired
     UserRepository userRepository;
 
-    public GeminiApiService(RestTemplate restTemplate) {
+
+
+    public GeminiApiService(RestTemplate restTemplate, @Value("${GEMINI_API_KEY}") String apiKey) {
         this.restTemplate = restTemplate;
+        this.apiKey = apiKey;
+        this.apiUrl  = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key="+apiKey;
     }
 
     public MealPlanResponseDto getMealPlan(MealPlanRequestDto mealPlanRequestDto) {
@@ -68,7 +69,7 @@ public class GeminiApiService {
         // Build URI for API
 
         // Make the API call
-        ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class);
 
         System.out.println("Raw JSON Response: " + response.getBody());
 
