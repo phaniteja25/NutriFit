@@ -104,7 +104,10 @@ const Login = () => {
                 alert('User not found');
             } else if (response.status === 401) {
                 alert('Wrong credentials');
-            } else {
+            } else if(response.status===503){
+                alert('Service is temporarily unavailable. Please try again later')
+            } 
+            else {
                 alert('An error occurred. Please try again later.');
             }
         } catch (error) {

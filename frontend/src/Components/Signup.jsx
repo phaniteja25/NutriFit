@@ -137,7 +137,10 @@ const Signup = () => {
                     setIsLoading(false); // Hide loading dialog
                     navigate('/');
                 }, 2000); // 4000 milliseconds = 4 seconds
-            } else {
+            } else if(response.status===503){
+                alert('Service is temporarily unavailable. Please try again later')
+            }  
+            else {
                 const errorMessage = await response.text();
                 alert(`Signup failed: ${errorMessage}`);
                 setIsLoading(false); // Hide loading dialog immediately if signup fails
