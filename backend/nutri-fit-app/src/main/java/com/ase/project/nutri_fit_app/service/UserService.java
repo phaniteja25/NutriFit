@@ -2,11 +2,15 @@ package com.ase.project.nutri_fit_app.service;
 
 import com.ase.project.nutri_fit_app.dto.UpdateUserInfoDto;
 import com.ase.project.nutri_fit_app.dto.UserInfoDto;
+import com.ase.project.nutri_fit_app.exception.DatabaseConnectionException;
 import com.ase.project.nutri_fit_app.model.UserInfo;
 import com.ase.project.nutri_fit_app.model.Users;
 import com.ase.project.nutri_fit_app.repo.UserRepository;
 import com.ase.project.nutri_fit_app.util.NutritionalInfoCalcluator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,14 +27,25 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     public Users register(Users user) {
 
-        if (checkIfUsernameExists(user.getUsername())) {
-            throw new IllegalArgumentException("Username already exists!");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepo.save(user);
+        try {
 
+            if (checkIfUsernameExists(user.getUsername())) {
+                throw new IllegalArgumentException("Username already exists!");
+            }
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        }
+        catch(IllegalArgumentException ex){
+            throw ex;
+        }
+        catch (JpaSystemException ex){
+            throw new DatabaseConnectionException("Database Connection error"+ex);
+        }
+        return userRepo.save(user);
     }
 
     public boolean checkIfUsernameExists(String username) {
@@ -51,155 +66,175 @@ public class UserService {
 
     public UserInfoDto get_user_info(String username) {
 
-        Users currUser = userRepo.findByUsername(username);
+        try {
+            Users currUser = userRepo.findByUsername(username);
 
-        UserInfo userInfo = currUser.getUserInfo();
+            UserInfo userInfo = currUser.getUserInfo();
 
-        UserInfoDto userInfoDto = new UserInfoDto();
+            UserInfoDto userInfoDto = new UserInfoDto();
 
-        //setting the values
-        userInfoDto.setHeight(userInfo.getHeight());
-        userInfoDto.setWeight(userInfo.getWeight());
-        userInfoDto.setAge(userInfo.getAge());
-        userInfoDto.setGender(userInfo.getGender());
-        userInfoDto.setActivity_level(userInfo.getActivity_level());
-        userInfoDto.setGoal(userInfo.getGoal());
-        userInfoDto.setTotal_cal_intake(userInfo.getTotal_cal_intake());
-        userInfoDto.setReqd_carbs(userInfo.getReqd_carbs());
-        userInfoDto.setReqd_protein(userInfo.getReqd_protein());
-        userInfoDto.setReqd_fat(userInfo.getReqd_fat());
-        userInfoDto.setUsername(currUser.getUsername());
-        userInfoDto.setEmail(currUser.getEmail());
+            //setting the values
+            userInfoDto.setHeight(userInfo.getHeight());
+            userInfoDto.setWeight(userInfo.getWeight());
+            userInfoDto.setAge(userInfo.getAge());
+            userInfoDto.setGender(userInfo.getGender());
+            userInfoDto.setActivity_level(userInfo.getActivity_level());
+            userInfoDto.setGoal(userInfo.getGoal());
+            userInfoDto.setTotal_cal_intake(userInfo.getTotal_cal_intake());
+            userInfoDto.setReqd_carbs(userInfo.getReqd_carbs());
+            userInfoDto.setReqd_protein(userInfo.getReqd_protein());
+            userInfoDto.setReqd_fat(userInfo.getReqd_fat());
+            userInfoDto.setUsername(currUser.getUsername());
+            userInfoDto.setEmail(currUser.getEmail());
 
-        return userInfoDto;
-
+            return userInfoDto;
+        }
+        catch (JpaSystemException ex){
+            throw new DatabaseConnectionException("Database Connection error"+ex);
+        }
 
     }
 
     public UserInfoDto update_user_info(String username, UpdateUserInfoDto updateUserInfoDto) throws Exception {
+        try {
+            Users user = userRepo.findByUsername(username);
 
-        Users user = userRepo.findByUsername(username);
+            UserInfo userInfo = user.getUserInfo();
 
-        UserInfo userInfo = user.getUserInfo();
-
-        Double new_height = null;
-        Double new_weight = null;
-        int new_age = 0;
-        String new_gender = null;
-        String new_activity_level = null;
-        String new_goal = null;
-        Double new_reqd_protein = null;
-        Double new_reqd_fat = null;
-        Double new_reqd_carbs = null;
+            Double new_height = null;
+            Double new_weight = null;
+            int new_age = 0;
+            String new_gender = null;
+            String new_activity_level = null;
+            String new_goal = null;
+            Double new_reqd_protein = null;
+            Double new_reqd_fat = null;
+            Double new_reqd_carbs = null;
 
 
-        if (updateUserInfoDto.getHeight() != null) {
-            new_height = updateUserInfoDto.getHeight();
-        } else {
-            new_height = userInfo.getHeight();
+            if (updateUserInfoDto.getHeight() != null) {
+                new_height = updateUserInfoDto.getHeight();
+            } else {
+                new_height = userInfo.getHeight();
+            }
+            if (updateUserInfoDto.getWeight() != null) {
+                new_weight = updateUserInfoDto.getWeight();
+            } else {
+                new_weight = userInfo.getWeight();
+            }
+
+            if (updateUserInfoDto.getAge() > 0) {
+                new_age = updateUserInfoDto.getAge();
+            } else {
+                new_age = userInfo.getAge();
+            }
+
+            if (updateUserInfoDto.getGender() != null) {
+                new_gender = updateUserInfoDto.getGender();
+            } else {
+                new_gender = userInfo.getGender();
+            }
+
+            if (updateUserInfoDto.getActivity_level() != null) {
+                new_activity_level = updateUserInfoDto.getActivity_level();
+            } else {
+                new_activity_level = userInfo.getActivity_level();
+            }
+
+            if (updateUserInfoDto.getGoal() != null) {
+                new_goal = updateUserInfoDto.getGoal();
+            } else {
+                new_goal = userInfo.getGoal();
+            }
+
+            if (updateUserInfoDto.getReqd_protein() != null) {
+                new_reqd_protein = updateUserInfoDto.getReqd_protein();
+            } else {
+                new_reqd_protein = userInfo.getReqd_protein();
+            }
+
+            if (updateUserInfoDto.getReqd_fat() != null) {
+                new_reqd_fat = updateUserInfoDto.getReqd_fat();
+            } else {
+                new_reqd_fat = userInfo.getReqd_fat();
+            }
+
+            if (updateUserInfoDto.getReqd_carbs() != null) {
+                new_reqd_carbs = updateUserInfoDto.getReqd_carbs();
+            } else {
+                new_reqd_carbs = userInfo.getReqd_carbs();
+            }
+
+            NutritionalInfoCalcluator calculator = new NutritionalInfoCalcluator(
+                    new_height, new_weight, new_age,
+                    new_gender, new_activity_level, new_goal
+            );
+            userInfo.setWeight(new_weight);
+            userInfo.setHeight(new_height);
+            userInfo.setAge(new_age);
+            userInfo.setActivity_level(new_activity_level);
+            userInfo.setGoal(new_goal);
+            userInfo.setTotal_cal_intake(calculator.calc_calorie());
+            userInfo.setReqd_protein(calculator.calc_proteins());
+            userInfo.setReqd_fat(calculator.calc_fats());
+            userInfo.setReqd_carbs(calculator.calc_carbs());
+
+
+            // Ensure the relationship consistency (if needed)
+            userInfo.setUsers(user); // Set the user back to UserInfo to maintain bidirectional consistency
+
+            // Save the updated UserInfo
+            userInfoService.save_user_info(userInfo);
+
+            // Prepare and return UserInfoDto
+            UserInfoDto userInfoDto = new UserInfoDto();
+            userInfoDto.setUsername(user.getUsername());
+            userInfoDto.setEmail(user.getEmail());
+            userInfoDto.setHeight(userInfo.getHeight());
+            userInfoDto.setWeight(userInfo.getWeight());
+            userInfoDto.setAge(userInfo.getAge());
+            userInfoDto.setGender(userInfo.getGender());
+            userInfoDto.setActivity_level(userInfo.getActivity_level());
+            userInfoDto.setGoal(userInfo.getGoal());
+            userInfoDto.setTotal_cal_intake(userInfo.getTotal_cal_intake());
+            userInfoDto.setReqd_protein(userInfo.getReqd_protein());
+            userInfoDto.setReqd_fat(userInfo.getReqd_fat());
+            userInfoDto.setReqd_carbs(userInfo.getReqd_carbs());
+
+            System.out.println(userInfoDto.toString());
+
+            return userInfoDto;
         }
-        if (updateUserInfoDto.getWeight() != null) {
-            new_weight = updateUserInfoDto.getWeight();
-        } else {
-            new_weight = userInfo.getWeight();
+        catch (JpaSystemException ex){
+            logger.error("Database error while updating user {}", username, ex);
+            throw new DatabaseConnectionException("Failed to update user - database error", ex);
+        }
+        catch(Exception e){
+            logger.error("Exception occured"+e);
+            throw e;
         }
 
-        if (updateUserInfoDto.getAge() > 0) {
-            new_age = updateUserInfoDto.getAge();
-        } else {
-            new_age = userInfo.getAge();
-        }
-
-        if (updateUserInfoDto.getGender() != null) {
-            new_gender = updateUserInfoDto.getGender();
-        } else {
-            new_gender = userInfo.getGender();
-        }
-
-        if (updateUserInfoDto.getActivity_level() != null) {
-            new_activity_level = updateUserInfoDto.getActivity_level();
-        } else {
-            new_activity_level = userInfo.getActivity_level();
-        }
-
-        if (updateUserInfoDto.getGoal() != null) {
-            new_goal = updateUserInfoDto.getGoal();
-        } else {
-            new_goal = userInfo.getGoal();
-        }
-
-        if (updateUserInfoDto.getReqd_protein() != null) {
-            new_reqd_protein = updateUserInfoDto.getReqd_protein();
-        } else {
-            new_reqd_protein = userInfo.getReqd_protein();
-        }
-
-        if (updateUserInfoDto.getReqd_fat() != null) {
-            new_reqd_fat = updateUserInfoDto.getReqd_fat();
-        } else {
-            new_reqd_fat = userInfo.getReqd_fat();
-        }
-
-        if (updateUserInfoDto.getReqd_carbs() != null) {
-            new_reqd_carbs = updateUserInfoDto.getReqd_carbs();
-        } else {
-            new_reqd_carbs = userInfo.getReqd_carbs();
-        }
-
-        NutritionalInfoCalcluator calculator = new NutritionalInfoCalcluator(
-                new_height, new_weight, new_age,
-                new_gender, new_activity_level,new_goal
-        );
-        userInfo.setWeight(new_weight);
-        userInfo.setHeight(new_height);
-        userInfo.setAge(new_age);
-        userInfo.setActivity_level(new_activity_level);
-        userInfo.setGoal(new_goal);
-        userInfo.setTotal_cal_intake(calculator.calc_calorie());
-        userInfo.setReqd_protein(calculator.calc_proteins());
-        userInfo.setReqd_fat(calculator.calc_fats());
-        userInfo.setReqd_carbs(calculator.calc_carbs());
-
-
-        // Ensure the relationship consistency (if needed)
-        userInfo.setUsers(user); // Set the user back to UserInfo to maintain bidirectional consistency
-
-        // Save the updated UserInfo
-        userInfoService.save_user_info(userInfo);
-
-        // Prepare and return UserInfoDto
-        UserInfoDto userInfoDto = new UserInfoDto();
-        userInfoDto.setUsername(user.getUsername());
-        userInfoDto.setEmail(user.getEmail());
-        userInfoDto.setHeight(userInfo.getHeight());
-        userInfoDto.setWeight(userInfo.getWeight());
-        userInfoDto.setAge(userInfo.getAge());
-        userInfoDto.setGender(userInfo.getGender());
-        userInfoDto.setActivity_level(userInfo.getActivity_level());
-        userInfoDto.setGoal(userInfo.getGoal());
-        userInfoDto.setTotal_cal_intake(userInfo.getTotal_cal_intake());
-        userInfoDto.setReqd_protein(userInfo.getReqd_protein());
-        userInfoDto.setReqd_fat(userInfo.getReqd_fat());
-        userInfoDto.setReqd_carbs(userInfo.getReqd_carbs());
-
-        System.out.println(userInfoDto.toString());
-
-        return userInfoDto;
     }
 
     @Transactional
     public String updatePassword(String username, String newPassword) {
-        Users user = userRepo.findByUsername(username);
+        try {
 
-        if (user == null) {
-            return "User not found";
+            Users user = userRepo.findByUsername(username);
+
+            if (user == null) {
+                return "User not found";
+            }
+
+            // Encrypt the new password before saving it
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepo.save(user);
+
+            return "Password updated successfully";
         }
-
-        // Encrypt the new password before saving it
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepo.save(user);
-
-        return "Password updated successfully";
+        catch (JpaSystemException ex){
+            throw new DatabaseConnectionException("Database Connection error"+ex);
+        }
     }
 
 }

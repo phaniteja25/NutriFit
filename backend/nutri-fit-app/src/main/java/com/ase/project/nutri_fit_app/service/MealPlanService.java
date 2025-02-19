@@ -5,16 +5,20 @@ import com.ase.project.nutri_fit_app.dto.DayMealDto;
 import com.ase.project.nutri_fit_app.dto.DayMealInfoDto;
 import com.ase.project.nutri_fit_app.dto.MealPlanRequestDto;
 import com.ase.project.nutri_fit_app.dto.MealPlanResponseDto;
+import com.ase.project.nutri_fit_app.exception.DatabaseConnectionException;
 import com.ase.project.nutri_fit_app.model.DayMeal;
 import com.ase.project.nutri_fit_app.model.DayMealInfo;
 import com.ase.project.nutri_fit_app.model.MealPlan;
 import com.ase.project.nutri_fit_app.model.Users;
 import com.ase.project.nutri_fit_app.repo.MealPlanRepository;
 import com.ase.project.nutri_fit_app.repo.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.apache.catalina.User;
+import org.slf4j.ILoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.IconView;
@@ -35,112 +39,129 @@ public class MealPlanService {
     private UserRepository userRepository;
 
 
-    public MealPlanResponseDto saveMealPlan(String username,MealPlanResponseDto mealPlanResponseDto){
+    public MealPlanResponseDto saveMealPlan(String username,MealPlanResponseDto mealPlanResponseDto) throws Exception {
 
-        Users users = userRepository.findByUsername(username);
-        MealPlan mealPlan = new MealPlan();
-        mealPlan.setStartDate(LocalDate.now());
-        mealPlan.setUsers(users);
+        try {
 
-        List<DayMeal> dayMeals = new ArrayList<>();
+            Users users = userRepository.findByUsername(username);
+            MealPlan mealPlan = new MealPlan();
+            mealPlan.setStartDate(LocalDate.now());
+            mealPlan.setUsers(users);
 
-        int dayNumber = 1;
-        for (DayMealDto dayMealDto : mealPlanResponseDto.getMealPlan()){
+            List<DayMeal> dayMeals = new ArrayList<>();
 
-            DayMeal dayMeal = new DayMeal();
-            dayMeal.setDayNumber(dayNumber++);
-            dayMeal.setMealPlan(mealPlan);
+            int dayNumber = 1;
+            for (DayMealDto dayMealDto : mealPlanResponseDto.getMealPlan()) {
+
+                DayMeal dayMeal = new DayMeal();
+                dayMeal.setDayNumber(dayNumber++);
+                dayMeal.setMealPlan(mealPlan);
 
 
-            List<DayMealInfo> dayMealInfos = new ArrayList<>();
+                List<DayMealInfo> dayMealInfos = new ArrayList<>();
 
-            for(DayMealInfoDto dayMealInfoDto : dayMealDto.getMeals()){
+                for (DayMealInfoDto dayMealInfoDto : dayMealDto.getMeals()) {
 
-                DayMealInfo dayMealInfo = new DayMealInfo();
+                    DayMealInfo dayMealInfo = new DayMealInfo();
 
-                dayMealInfo.setMealType(dayMealInfoDto.getType());
-                dayMealInfo.setDescription(dayMealInfoDto.getName());
-                dayMealInfo.setProtein(Double.parseDouble(dayMealInfoDto.getProtein().replace("g", "")));
-                dayMealInfo.setCarbs(Double.parseDouble(dayMealInfoDto.getCarbs().replace("g", "")));
-                dayMealInfo.setFat(Double.parseDouble(dayMealInfoDto.getFat().replace("g", "")));
-                dayMealInfo.setCalories(Double.parseDouble(dayMealInfoDto.getCalories().replace("g", "")));
-                dayMealInfo.setDayMeal(dayMeal);
-                dayMealInfos.add(dayMealInfo);
+                    dayMealInfo.setMealType(dayMealInfoDto.getType());
+                    dayMealInfo.setDescription(dayMealInfoDto.getName());
+                    dayMealInfo.setProtein(Double.parseDouble(dayMealInfoDto.getProtein().replace("g", "")));
+                    dayMealInfo.setCarbs(Double.parseDouble(dayMealInfoDto.getCarbs().replace("g", "")));
+                    dayMealInfo.setFat(Double.parseDouble(dayMealInfoDto.getFat().replace("g", "")));
+                    dayMealInfo.setCalories(Double.parseDouble(dayMealInfoDto.getCalories().replace("g", "")));
+                    dayMealInfo.setDayMeal(dayMeal);
+                    dayMealInfos.add(dayMealInfo);
+
+                }
+
+                dayMeal.setMeals(dayMealInfos);
+                dayMeals.add(dayMeal);
+
 
             }
 
-            dayMeal.setMeals(dayMealInfos);
-            dayMeals.add(dayMeal);
+            mealPlan.setDays(dayMeals);
 
 
-
-
-
-        }
-
-        mealPlan.setDays(dayMeals);
-
-        try {
             mealPlanRepository.save(mealPlan);
+
+            return mealPlanResponseDto;
+        }
+        catch(JpaSystemException jpaex){
+
+            throw new DatabaseConnectionException("Unable to connect to database - max connection limit reached");
         }
         catch (Exception e){
-            System.out.println("Error occured"+e);
+            throw new Exception("Exception occured"+e);
         }
-        return mealPlanResponseDto;
 
     }
 
 
     public MealPlanResponseDto getMealPlanDB(String username) throws Exception {
-        Users users = userRepository.findByUsername(username);
-        List<MealPlan> mealPlans = mealPlanRepository.findAllByUserOrderByCreatedAtDesc(users.getUser_id());
+        try {
+            Users users = userRepository.findByUsername(username);
+            List<MealPlan> mealPlans = mealPlanRepository.findAllByUserOrderByCreatedAtDesc(users.getUser_id());
 
 
-        MealPlan latestMealPlan = mealPlans.isEmpty() ? null : mealPlans.get(0);
+            MealPlan latestMealPlan = mealPlans.isEmpty() ? null : mealPlans.get(0);
 
-        MealPlanResponseDto mealPlanResponseDto = null;
-        if(latestMealPlan!=null){
-             mealPlanResponseDto = convertToDto(latestMealPlan);
+            MealPlanResponseDto mealPlanResponseDto = null;
+            if (latestMealPlan != null) {
+                mealPlanResponseDto = convertToDto(latestMealPlan);
+            } else {
+                throw new Exception("No meal plan found for the user");
+            }
+            return mealPlanResponseDto;
         }
-        else{
-            throw  new Exception("No meal plan found for the user");
-        }
-        return mealPlanResponseDto;
+        catch(JpaSystemException jpaex){
 
-    }
+            throw new DatabaseConnectionException("Unable to connect to database - max connection limit reached");
+        }
+
+        catch (Exception e){
+            throw new Exception("Exception occured"+e);
+        }    }
 
     private MealPlanResponseDto convertToDto(MealPlan mealPlan) {
+        try {
 
-        MealPlanResponseDto dto = new MealPlanResponseDto();
+            MealPlanResponseDto dto = new MealPlanResponseDto();
 
-        List<DayMealDto> dayMealDtos = new ArrayList<>();
+            List<DayMealDto> dayMealDtos = new ArrayList<>();
 
-        for(DayMeal dayMeal : mealPlan.getDays()){
+            for (DayMeal dayMeal : mealPlan.getDays()) {
 
-            DayMealDto dayMealDto = new DayMealDto();
-            dayMealDto.setDay("Day "+dayMeal.getDayNumber());
+                DayMealDto dayMealDto = new DayMealDto();
+                dayMealDto.setDay("Day " + dayMeal.getDayNumber());
 
-            List<DayMealInfoDto> dayMealInfoDTOs = new ArrayList<>();
+                List<DayMealInfoDto> dayMealInfoDTOs = new ArrayList<>();
 
-            for (DayMealInfo mealInfo : dayMeal.getMeals()) {
-                DayMealInfoDto mealInfoDto = new DayMealInfoDto();
-                mealInfoDto.setType(mealInfo.getMealType());
-                mealInfoDto.setName(mealInfo.getDescription());
-                mealInfoDto.setProtein(""+mealInfo.getProtein());
-                mealInfoDto.setCarbs(""+mealInfo.getCarbs());
-                mealInfoDto.setFat(""+mealInfo.getFat());
-                mealInfoDto.setCalories(""+ mealInfo.getCalories());
-                dayMealInfoDTOs.add(mealInfoDto);
+                for (DayMealInfo mealInfo : dayMeal.getMeals()) {
+                    DayMealInfoDto mealInfoDto = new DayMealInfoDto();
+                    mealInfoDto.setType(mealInfo.getMealType());
+                    mealInfoDto.setName(mealInfo.getDescription());
+                    mealInfoDto.setProtein("" + mealInfo.getProtein());
+                    mealInfoDto.setCarbs("" + mealInfo.getCarbs());
+                    mealInfoDto.setFat("" + mealInfo.getFat());
+                    mealInfoDto.setCalories("" + mealInfo.getCalories());
+                    dayMealInfoDTOs.add(mealInfoDto);
+                }
+
+                dayMealDto.setMeals(dayMealInfoDTOs);
+                dayMealDtos.add(dayMealDto);
+
+
             }
 
-            dayMealDto.setMeals(dayMealInfoDTOs);
-            dayMealDtos.add(dayMealDto);
-
-
+            dto.setMealPlan(dayMealDtos);
+            return dto;
+        }
+        catch (JpaSystemException ex){
+            throw new DatabaseConnectionException("Database Connection error"+ex);
         }
 
-        dto.setMealPlan(dayMealDtos);
-        return dto;
 
 
 
