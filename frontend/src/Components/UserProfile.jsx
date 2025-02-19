@@ -27,7 +27,7 @@ const UserProfile = () => {
 
     const fetchUserInfo = async (authToken) => {
         try {
-            const response = await fetch('https://nutrifit-production-d71d.up.railway.app/user/userinfo', {
+            const response = await fetch('https://nutrifit-production-8d5a.up.railway.app/user/userinfo', {
                 headers: {
                     Authorization: `Bearer ${authToken}`,
                 },
@@ -63,7 +63,7 @@ const UserProfile = () => {
         }
 
         try {
-            const response = await fetch('https://nutrifit-production-d71d.up.railway.app/user/update_user_info', {
+            const response = await fetch('https://nutrifit-production-8d5a.up.railway.app/user/update_user_info', {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${token}`,

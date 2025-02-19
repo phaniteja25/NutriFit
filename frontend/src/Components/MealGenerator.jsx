@@ -56,7 +56,7 @@ const MealPlanGenerator = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch("https://nutrifit-production-d71d.up.railway.app/mealPlan/create", {
+            const response = await fetch("https://nutrifit-production-8d5a.up.railway.app/mealPlan/create", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
