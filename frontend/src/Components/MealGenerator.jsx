@@ -146,7 +146,7 @@ const MealPlanGenerator = () => {
                         />
                     </div>
                     <div className="form-group mb-4">
-                        <label className="block text-gray-700 font-bold mb-2">Cuisine: Ex: Indian, Chinese, Mexican</label>
+                        <label className="block text-gray-700 font-bold mb-2">Cuisine/Diet Type: Ex: Indian, Chinese, Keto Diet</label>
                         <input
                             type="text"
                             value={cuisineType}
