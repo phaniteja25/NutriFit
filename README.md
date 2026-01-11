@@ -1,5 +1,10 @@
 # NutriFit - AI powered Nutritional Tracker and Meal Planner
-Nutrifit is an AI powered nutritional tracker and meal planner. The user can track daily calorie intake by just natural language processing. For ex: I ate a bowl of omlette and one glass of milk. The system intelligently recognizes the food items and the portions 
+Nutrifit is an AI powered nutritional tracker and meal planner. The user can track daily calorie intake by just natural language processing. For ex: I ate a bowl of omlette and one glass of milk. The system intelligently recognizes the food items and the portions
+<br>
+Demo
+<br>
+https://drive.google.com/file/d/12I4puKoyFnTeKOUJRaqzrzCp_W-ul_mA/view?usp=sharing
+
 ### System Architecture
 **Components**
 - Frontend: React (CRA) + Tailwind CSS, served via Nginx in production
