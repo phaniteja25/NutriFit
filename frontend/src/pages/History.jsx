@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MealHistory from './MealHistory';
-import Navbar from './Navbar';
-import bg_img from './image_bg.jpg';
+import MealHistory from '../Components/MealHistory';
+import Navbar from '../sharedUI/Navbar';
+import bg_img from '../assets/image_bg.jpg';
 
 const History = () => {
   const [mealsByDate, setMealsByDate] = useState({});

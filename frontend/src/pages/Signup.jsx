@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SignupNavbar from './SignupNavbar';
+import SignupNavbar from '../sharedUI/SignupNavbar';
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -123,7 +123,7 @@ const Signup = () => {
         };
 
         try {
-            const response = await fetch('https://nutrifit-production-8d5a.up.railway.app/user/signup', {
+            const response = await fetch('http://localhost:8080/user/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

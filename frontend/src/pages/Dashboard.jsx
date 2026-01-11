@@ -14,8 +14,8 @@ import "react-circular-progressbar/dist/styles.css";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Navbar from "./Navbar";
-import bg_img from './image_bg.jpg';
+import Navbar from "../sharedUI/Navbar";
+import bg_img from '../assets/image_bg.jpg';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -46,7 +46,7 @@ const Dashboard = () => {
 
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch("https://nutrifit-production-8d5a.up.railway.app/user/userinfo", {
+            const response = await fetch("http://localhost:8080/user/userinfo", {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${authToken}`
@@ -64,7 +64,7 @@ const Dashboard = () => {
 
     const fetchCurrentDaySummary = async () => {
         try {
-            const response = await fetch("https://nutrifit-production-8d5a.up.railway.app/api/meals/current_day_summary", {
+            const response = await fetch("http://localhost:8080/api/meals/current_day_summary", {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${authToken}`
@@ -83,7 +83,7 @@ const Dashboard = () => {
 
     const fetchMeals = async () => {
         try {
-            const response = await fetch("https://nutrifit-production-8d5a.up.railway.app/api/meals/get_all_meals", {
+            const response = await fetch("http://localhost:8080/api/meals/get_all_meals", {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${authToken}`

@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class APIClient {
 
-    @Value("${API_KEY}")
+    @Value("${CAL_NINJA_API_KEY}")
     String apiKey;
 
     public String sendRequest(String prompt) throws  Exception{

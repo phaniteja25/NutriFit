@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from './Navbar';
-import bg_img from './image_bg.jpg';
+import Navbar from '../sharedUI/Navbar';
+import bg_img from '../assets/image_bg.jpg';
 
 const UserProfile = () => {
     const [profile, setProfile] = useState({
@@ -27,7 +27,7 @@ const UserProfile = () => {
 
     const fetchUserInfo = async (authToken) => {
         try {
-            const response = await fetch('https://nutrifit-production-8d5a.up.railway.app/user/userinfo', {
+            const response = await fetch('http://localhost:8080/user/userinfo', {
                 headers: {
                     Authorization: `Bearer ${authToken}`,
                 },
@@ -63,7 +63,7 @@ const UserProfile = () => {
         }
 
         try {
-            const response = await fetch('https://nutrifit-production-8d5a.up.railway.app/user/update_user_info', {
+            const response = await fetch('http://localhost:8080/user/update_user_info', {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${token}`,

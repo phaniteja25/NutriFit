@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SignupNavbar from './SignupNavbar';
+import SignupNavbar from '../sharedUI/SignupNavbar';
 
 const Login = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -58,7 +58,7 @@ const Login = () => {
         }
 
         try {
-            const response = await fetch('https://nutrifit-production-8d5a.up.railway.app/user/update-password', {
+            const response = await fetch('http://localhost:8080/user/update-password', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -81,7 +81,7 @@ const Login = () => {
         e.preventDefault();
         
         try {
-            const response = await fetch('https://nutrifit-production-8d5a.up.railway.app/user/generate-token', {
+            const response = await fetch('http://localhost:8080/user/generate-token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
